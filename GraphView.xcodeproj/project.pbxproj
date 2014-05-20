@@ -21,6 +21,8 @@
 		DFBF4C8E192B670400118C9B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBF4C70192B670400118C9B /* UIKit.framework */; };
 		DFBF4C96192B670400118C9B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DFBF4C94192B670400118C9B /* InfoPlist.strings */; };
 		DFBF4C98192B670400118C9B /* GraphViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBF4C97192B670400118C9B /* GraphViewTests.m */; };
+		DFBF4CA4192B68FF00118C9B /* ACScatterPlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBF4CA3192B68FF00118C9B /* ACScatterPlotView.m */; };
+		DFBF4CAA192B6CC200118C9B /* ACAxis.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBF4CA9192B6CC200118C9B /* ACAxis.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,10 @@
 		DFBF4C93192B670400118C9B /* GraphViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GraphViewTests-Info.plist"; sourceTree = "<group>"; };
 		DFBF4C95192B670400118C9B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DFBF4C97192B670400118C9B /* GraphViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GraphViewTests.m; sourceTree = "<group>"; };
+		DFBF4CA2192B68FF00118C9B /* ACScatterPlotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACScatterPlotView.h; sourceTree = "<group>"; };
+		DFBF4CA3192B68FF00118C9B /* ACScatterPlotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACScatterPlotView.m; sourceTree = "<group>"; };
+		DFBF4CA8192B6CC200118C9B /* ACAxis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAxis.h; sourceTree = "<group>"; };
+		DFBF4CA9192B6CC200118C9B /* ACAxis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAxis.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +123,7 @@
 				DFBF4C7E192B670400118C9B /* Main.storyboard */,
 				DFBF4C81192B670400118C9B /* ACViewController.h */,
 				DFBF4C82192B670400118C9B /* ACViewController.m */,
+				DFBF4CA1192B68C700118C9B /* ACScatterPlotView */,
 				DFBF4C84192B670400118C9B /* Images.xcassets */,
 				DFBF4C73192B670400118C9B /* Supporting Files */,
 			);
@@ -150,6 +157,17 @@
 				DFBF4C94192B670400118C9B /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DFBF4CA1192B68C700118C9B /* ACScatterPlotView */ = {
+			isa = PBXGroup;
+			children = (
+				DFBF4CA2192B68FF00118C9B /* ACScatterPlotView.h */,
+				DFBF4CA3192B68FF00118C9B /* ACScatterPlotView.m */,
+				DFBF4CA8192B6CC200118C9B /* ACAxis.h */,
+				DFBF4CA9192B6CC200118C9B /* ACAxis.m */,
+			);
+			name = ACScatterPlotView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,7 +269,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFBF4C7D192B670400118C9B /* ACAppDelegate.m in Sources */,
+				DFBF4CA4192B68FF00118C9B /* ACScatterPlotView.m in Sources */,
 				DFBF4C83192B670400118C9B /* ACViewController.m in Sources */,
+				DFBF4CAA192B6CC200118C9B /* ACAxis.m in Sources */,
 				DFBF4C79192B670400118C9B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,6 +356,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CODE_SIGN_FLAGS = "-gta";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -367,6 +388,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_CODE_SIGN_FLAGS = "-gta";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -380,6 +402,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GraphView/GraphView-Prefix.pch";
 				INFOPLIST_FILE = "GraphView/GraphView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -393,6 +416,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GraphView/GraphView-Prefix.pch";
 				INFOPLIST_FILE = "GraphView/GraphView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
