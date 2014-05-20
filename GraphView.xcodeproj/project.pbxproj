@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF01E9E0192BA48000BE977E /* ACAxisRange.m in Sources */ = {isa = PBXBuildFile; fileRef = DF01E9DF192BA48000BE977E /* ACAxisRange.m */; };
 		DFBF4C6D192B670400118C9B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBF4C6C192B670400118C9B /* Foundation.framework */; };
 		DFBF4C6F192B670400118C9B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBF4C6E192B670400118C9B /* CoreGraphics.framework */; };
 		DFBF4C71192B670400118C9B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBF4C70192B670400118C9B /* UIKit.framework */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DF01E9DE192BA48000BE977E /* ACAxisRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAxisRange.h; sourceTree = "<group>"; };
+		DF01E9DF192BA48000BE977E /* ACAxisRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAxisRange.m; sourceTree = "<group>"; };
 		DFBF4C69192B670400118C9B /* GraphView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFBF4C6C192B670400118C9B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DFBF4C6E192B670400118C9B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -166,6 +169,8 @@
 				DFBF4CA3192B68FF00118C9B /* ACScatterPlotView.m */,
 				DFBF4CA8192B6CC200118C9B /* ACAxis.h */,
 				DFBF4CA9192B6CC200118C9B /* ACAxis.m */,
+				DF01E9DE192BA48000BE977E /* ACAxisRange.h */,
+				DF01E9DF192BA48000BE977E /* ACAxisRange.m */,
 			);
 			name = ACScatterPlotView;
 			sourceTree = "<group>";
@@ -268,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF01E9E0192BA48000BE977E /* ACAxisRange.m in Sources */,
 				DFBF4C7D192B670400118C9B /* ACAppDelegate.m in Sources */,
 				DFBF4CA4192B68FF00118C9B /* ACScatterPlotView.m in Sources */,
 				DFBF4C83192B670400118C9B /* ACViewController.m in Sources */,
@@ -481,6 +487,7 @@
 				DFBF4C9D192B670400118C9B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DFBF4C9E192B670400118C9B /* Build configuration list for PBXNativeTarget "GraphViewTests" */ = {
 			isa = XCConfigurationList;
@@ -489,6 +496,7 @@
 				DFBF4CA0192B670400118C9B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
