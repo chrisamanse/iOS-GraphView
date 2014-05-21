@@ -17,6 +17,8 @@
 
 @property (weak, nonatomic) id<ACScatterPlotViewDataSource>dataSource;
 
+@property (strong, nonatomic, readonly) UIImageView *imageViewScatterPlot;
+
 @property (strong, nonatomic) ACAxis *xAxis;
 @property (strong, nonatomic) ACAxis *yAxis;
 

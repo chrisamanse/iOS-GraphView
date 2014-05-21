@@ -133,7 +133,7 @@
         CGContextAddLineToPoint(context, i*interval, mySize.height*resolution-(arc4random()%(int)(mySize.height*resolution)));
     }
     CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineWidth(context, 1.0);
+    CGContextSetLineWidth(context, 1.5);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1.0);
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextStrokePath(context);
