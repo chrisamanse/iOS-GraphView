@@ -12,6 +12,8 @@
 
 @interface ACScatterPlotView () {
     CGPoint initialPoint;
+    CGPoint lastPoint;
+    BOOL firstTimeOverlay;
 }
 
 @property (strong, nonatomic) UIImageView *imageViewScatterPlot;
@@ -89,7 +91,7 @@
 
 - (NSNumber *)lineWidth {
     if (!_lineWidth) {
-        _lineWidth = [NSNumber numberWithDouble:1];
+        _lineWidth = [NSNumber numberWithDouble:0.75];
     }
     return _lineWidth;
 }
@@ -113,16 +115,18 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.imageViewScatterPlot];
-    NSLog(@"%0.2f, %0.2f", point.x, point.y);
+//    NSLog(@"%0.2f, %0.2f", point.x, point.y);
     
     [self drawOverlayWithPoint:point];
     initialPoint = point;
+    
+    firstTimeOverlay = !firstTimeOverlay;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.imageViewScatterPlot];
-    NSLog(@"%0.2f, %0.2f", point.x, point.y);
+//    NSLog(@"%0.2f, %0.2f", point.x, point.y);
     [self drawOverlayWithPoint:point];
 }
 
@@ -131,10 +135,16 @@
     CGPoint point = [touch locationInView:self.imageViewScatterPlot];
     
     // If initially touched point is near point where touch lifted, remove overlay
-    if (point.x >= initialPoint.x-10 && point.x <= initialPoint.x+10 &&
-        point.y >= initialPoint.y-10 && point.y <= initialPoint.y+10) {
+    if (!firstTimeOverlay &&
+        point.x >= initialPoint.x-5 && point.x <= initialPoint.x+5 &&
+        point.y >= initialPoint.y-5 && point.y <= initialPoint.y+5 &&
+        point.x >= lastPoint.x-5 && point.x <= lastPoint.x+5 &&
+        point.y >= lastPoint.y-5 && point.y <= lastPoint.y+5
+        ) {
         self.imageViewOverlay.image = nil;
     }
+    
+    lastPoint = point;
 }
 
 #pragma mark - Draw scatter plot
@@ -203,6 +213,9 @@
     CGPoint *origin = &rect.origin;
     CGSize *size =&rect.size;
     
+    // Unit length
+    double unitLength = [self.xAxisRange getUnitLengthUsingPlotWidth:size->width].doubleValue;
+    NSLog(@"Unit length: %0.2f", unitLength);
     // Initial y
     double yInitial = origin->y+size->height;
     
@@ -213,7 +226,7 @@
     double xInitial = origin->x;
     double xMax = origin->x+size->width;
     
-    for (double i = xInitial+interval; i <= xMax; i=i+interval) {
+    for (double i = xInitial+unitLength; i <= xMax; i=i+unitLength) {
         double yValue = arc4random()%(int)size->height;
         double yPositionInPlot = size->height - yValue+origin->y;
         CGContextAddLineToPoint(context, i, yPositionInPlot);

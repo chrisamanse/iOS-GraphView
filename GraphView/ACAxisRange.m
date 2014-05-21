@@ -26,4 +26,9 @@
     return axisRange;
 }
 
+- (NSNumber *)getUnitLengthUsingPlotWidth:(double)plotWidth {
+    double unitLength = plotWidth/(self.maximumNumber.doubleValue-self.minimumNumber.doubleValue);
+    return [NSNumber numberWithDouble:unitLength];
+}
+
 @end

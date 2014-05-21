@@ -39,11 +39,15 @@
 }
 
 - (IBAction)didPressSaveButton:(id)sender {
-//    UIImage *image = self.scatterPlotView.imageViewScatterPlot.image;
-//    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-//    NSURL *imageURL = [url URLByAppendingPathComponent:@"graph.jpeg"];
-//    NSString *path = imageURL.path;
-//    
-//    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
+    UIImage *image = self.scatterPlotView.imageViewScatterPlot.image;
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyyMMddHHmm";
+    NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
+    NSString *fileName = [NSString stringWithFormat:@"graph_%@.jpeg", dateString];
+    NSURL *imageURL = [url URLByAppendingPathComponent:fileName];
+    NSString *path = imageURL.path;
+    
+    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
 }
 @end

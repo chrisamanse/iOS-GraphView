@@ -13,8 +13,10 @@
 @property (strong, nonatomic, readonly) NSNumber *minimumNumber;
 @property (strong, nonatomic, readonly) NSNumber *maximumNumber;
 
-// unit length = max-min/plotWidth
+// unit length = plotWidth/(max-min)
 
 + (instancetype)axisRangeWithMinimum:(double)minimmum andMaximum:(double)maximum;
+
+- (NSNumber *)getUnitLengthUsingPlotWidth:(double)plotWidth;
 
 @end
