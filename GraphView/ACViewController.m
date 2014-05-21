@@ -29,7 +29,6 @@
                                                      self.viewScatterPlotViewContainer.frame.size.width,
                                                      self.viewScatterPlotViewContainer.frame.size.height)];
     [self.viewScatterPlotViewContainer addSubview:self.scatterPlotView];
-    
     [self.scatterPlotView drawScatterPlot];
 }
 
@@ -39,4 +38,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)didPressSaveButton:(id)sender {
+//    UIImage *image = self.scatterPlotView.imageViewScatterPlot.image;
+//    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//    NSURL *imageURL = [url URLByAppendingPathComponent:@"graph.jpeg"];
+//    NSString *path = imageURL.path;
+//    
+//    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
+}
 @end

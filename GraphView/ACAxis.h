@@ -10,4 +10,11 @@
 
 @interface ACAxis : NSObject
 
+@property (strong, nonatomic) NSNumber *majorIntervalLength;
+@property (strong, nonatomic) NSNumber *minorTicksBetweenMajorIntervals;
+
+// minorTicksLength = majorIntervalLength/minorTicksBetweenMajorIntervals
+@property (strong, nonatomic) NSNumber *majorTickLength;
+@property (strong, nonatomic) NSNumber *minorTickLength;
+
 @end
