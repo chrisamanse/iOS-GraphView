@@ -230,6 +230,7 @@
         double yValue = arc4random()%(int)size->height;
         double yPositionInPlot = size->height - yValue+origin->y;
         CGContextAddLineToPoint(context, i, yPositionInPlot);
+        NSLog(@"%0.2f", yValue);
     }
     
     // Line properties
