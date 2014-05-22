@@ -41,11 +41,17 @@
 // Data source provides data - y values
 @protocol ACScatterPlotViewDataSource <NSObject>
 
+@required
 - (NSNumber *)scatterPlotView:(ACScatterPlotView *)scatterPlotView numberForValueUsingX:(double)xValue;
 
 @end
 
 // Send messages to delegate when selection occurs
 @protocol ACScatterPlotViewDelegate <NSObject>
+
+@optional
+
+- (void)scatterPlotView:(ACScatterPlotView *)scatterPlotView didSelectXValue:(double)xValue withResultingYValue:(double)yValue;
+- (void)scatterPlotViewDidRemoveOverlay:(ACScatterPlotView *)scatterPlotView;
 
 @end

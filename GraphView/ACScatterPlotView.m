@@ -14,6 +14,7 @@
     CGPoint initialPoint;
     CGPoint lastPoint;
     BOOL firstTimeOverlay;
+    __block UIImage *imageHolder;
 }
 
 @property (strong, nonatomic) UIImageView *imageViewScatterPlot;
@@ -122,7 +123,6 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.imageViewScatterPlot];
-//    NSLog(@"%0.2f, %0.2f", point.x, point.y);
     
     [self drawOverlayWithPoint:point];
     initialPoint = point;
@@ -133,7 +133,6 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.imageViewScatterPlot];
-//    NSLog(@"%0.2f, %0.2f", point.x, point.y);
     [self drawOverlayWithPoint:point];
 }
 
@@ -149,6 +148,9 @@
         point.y >= lastPoint.y-5 && point.y <= lastPoint.y+5
         ) {
         self.imageViewOverlay.image = nil;
+        if ([self.delegate respondsToSelector:@selector(scatterPlotViewDidRemoveOverlay:)]) {
+            [self.delegate scatterPlotViewDidRemoveOverlay:self];
+        }
     }
     
     lastPoint = point;
@@ -160,31 +162,64 @@
     CGSize mySize = self.frame.size;
     double resolution = self.resolution.doubleValue;
     
-    UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
-                                           mySize.height*resolution));
-    CGContextRef currentContext = UIGraphicsGetCurrentContext();
+    // Single thread
+//    UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
+//                                           mySize.height*resolution));
+//    CGContextRef currentContext = UIGraphicsGetCurrentContext();
+//    
+//    double insetX = 20;
+//    double plotWidth = (mySize.width-((2*self.padding.doubleValue)+insetX))*resolution;
+//    double insetY = 20;
+//    double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution;
+//    
+//    double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
+//    double plotOriginY = self.padding.doubleValue*resolution;
+//    
+//    NSLog(@"Origin (%0.2f, %0.2f)", plotOriginX, plotOriginY);
+//    NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
+//    CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
+//    
+//    [self drawBoundsInContext:currentContext withRect:rect];
+//    
+////    [self drawLinesInContext:currentContext withSize:mySize andResolution:resolution];
+//    [self drawLinesInContext:currentContext inRect:rect];
+//    self.imageViewScatterPlot.image = UIGraphicsGetImageFromCurrentImageContext();
+//    
+//    UIGraphicsEndImageContext();
     
-    double insetX = 20;
-    double plotWidth = (mySize.width-((2*self.padding.doubleValue)+insetX))*resolution;
-    double insetY = 20;
-    double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution;
-    
-    double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
-    double plotOriginY = self.padding.doubleValue*resolution;
-    
-    NSLog(@"Origin (%0.2f, %0.2f)", plotOriginX, plotOriginY);
-    NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
-    CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
-    
-    [self drawBoundsInContext:currentContext withRect:rect];
-    
-//    [self drawLinesInContext:currentContext withSize:mySize andResolution:resolution];
-    [self drawLinesInContext:currentContext inRect:rect];
-    self.imageViewScatterPlot.image = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
+    // Multithread
+    imageHolder = [[UIImage alloc] init];
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
+                                               mySize.height*resolution));
+        CGContextRef currentContext = UIGraphicsGetCurrentContext();
+        
+        double insetX = 20;
+        double plotWidth = (mySize.width-((2*self.padding.doubleValue)+insetX))*resolution;
+        double insetY = 20;
+        double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution;
+        
+        double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
+        double plotOriginY = self.padding.doubleValue*resolution;
+        
+        NSLog(@"Origin (%0.2f, %0.2f)", plotOriginX, plotOriginY);
+        NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
+        CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
+        
+        [self drawBoundsInContext:currentContext withRect:rect];
+        [self drawLinesInContext:currentContext inRect:rect];
+        imageHolder = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [self performSelector:@selector(updateImage)];
+        });
+    });
 }
 
+- (void)updateImage {
+    self.imageViewScatterPlot.image = imageHolder;
+}
 - (void)drawBoundsInContext:(CGContextRef)context withRect:(CGRect)rect {
     CGPoint *origin = &rect.origin;
     CGSize *size = &rect.size;
@@ -235,7 +270,7 @@
     CGContextMoveToPoint(context, xInitialPositionInPlot, yInitialPositionInPlot);
     
     // Lines
-    double xMax = origin->x+size->width;
+    double xMax = origin->x+size->width + self.stepSize.doubleValue;
     
     for (double i = xInitialPositionInPlot + xUnitLength*self.stepSize.doubleValue; i <= xMax; i = i + xUnitLength*self.stepSize.doubleValue) {
         double xValue = xInitial + (i-xInitialPositionInPlot)/xUnitLength;
@@ -256,31 +291,6 @@
     CGContextStrokePath(context);
 }
 
-//- (void)drawLinesInContext:(CGContextRef)context withSize:(CGSize)mySize andResolution:(double)resolution {
-//    int interval = 10;
-//    
-//    // Initial point
-//    CGContextMoveToPoint(context, 0+self.padding.doubleValue*resolution,
-//                         (mySize.height-self.padding.doubleValue)*resolution);
-//    
-//    // Lines
-//    for (int i = 0; i*interval+self.padding.doubleValue*resolution <= (mySize.width-self.padding.doubleValue)*resolution; i++) {
-//        double yValue = arc4random()%(int)((mySize.height-2*self.padding.doubleValue)*resolution);
-////        yValue = 600;
-//        yValue -= 2*self.padding.doubleValue;
-//        CGContextAddLineToPoint(context, i*interval+self.padding.doubleValue*resolution,
-//                                ((mySize.height-2*self.padding.doubleValue)*resolution)-
-//                                yValue); // arc4random is y value
-//    }
-//    
-//    // Line properties
-//    CGContextSetLineCap(context, kCGLineCapRound);
-//    CGContextSetLineWidth(context, self.lineWidth.doubleValue*resolution);
-//    CGContextSetRGBStrokeColor(context, 0, 0, 0, 1.0);
-//    CGContextSetBlendMode(context, kCGBlendModeNormal);
-//    CGContextStrokePath(context);
-//}
-
 #pragma mark - Draw selection overlay
 
 - (void)drawOverlayWithPoint:(CGPoint)point {
@@ -290,20 +300,38 @@
     double insetX = 20;
     double plotWidth = (mySize.width-((2*self.padding.doubleValue)+insetX))*resolution;
     double insetY = 20;
-    double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution*(mySize.width/mySize.height);
+    double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution;
     
     double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
-    double plotOriginY = self.padding.doubleValue*resolution*(mySize.width/mySize.height);
+    double plotOriginY = self.padding.doubleValue*resolution;
+    
+    CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
+    CGPoint *origin = &rect.origin;
+    CGSize *size = &rect.size;
     
     if (point.x*resolution >= plotOriginX && point.x*resolution <= plotOriginX+plotWidth) {
         UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
-                                               mySize.width*resolution));
+                                               mySize.height*resolution));
         CGContextRef currentContext = UIGraphicsGetCurrentContext();
         
+        // Unit length
+        double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
+        double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
+        
+        double truePointX = point.x*resolution;
+        int index = round(((truePointX-plotOriginX)/xUnitLength)/self.stepSize.doubleValue);
+        double snappedPointX = origin->x+xUnitLength*self.stepSize.doubleValue*index;
+        
+        // Get x and y value
+        double xValue = self.xAxisRange.minimumNumber.doubleValue+self.stepSize.doubleValue*index;
+        double yValue = [self.dataSource scatterPlotView:self numberForValueUsingX:xValue].doubleValue;
+        
+        double yPositionInPlot = size->height+origin->y - (yValue-self.yAxisRange.minimumNumber.doubleValue)*yUnitLength;
+        
         // Draw vertical line as indicator of location
-        //    CGContextMoveToPoint(currentContext, point.x*resolution, mySize.height*resolution);
-        CGContextMoveToPoint(currentContext, point.x*resolution, plotOriginY+plotHeight);
-        CGContextAddLineToPoint(currentContext, point.x*resolution, plotOriginY);
+        CGContextMoveToPoint(currentContext, snappedPointX, plotOriginY+plotHeight);
+        CGContextAddLineToPoint(currentContext, snappedPointX, plotOriginY);
+        
         
         CGContextSetLineCap(currentContext, kCGLineCapRound);
         CGContextSetLineWidth(currentContext, self.lineWidth.doubleValue*resolution);
@@ -311,23 +339,20 @@
         CGContextSetBlendMode(currentContext, kCGBlendModeNormal);
         CGContextStrokePath(currentContext);
         
+        // Dot indicator for position of y value
+        CGRect yValueRect = CGRectMake(snappedPointX-3*resolution,
+                                       yPositionInPlot-3*resolution,
+                                       3*resolution*2, 3*resolution*2);
+        CGContextSetRGBFillColor(currentContext, 1.0, 0, 0, 1.0);
+        CGContextFillEllipseInRect(currentContext, yValueRect);
+        
         self.imageViewOverlay.image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        
+        if ([self.delegate respondsToSelector:@selector(scatterPlotView:didSelectXValue:withResultingYValue:)]) {
+            [self.delegate scatterPlotView:self didSelectXValue:xValue withResultingYValue:yValue];
+        }
     }
-    
-//    CGSize mySize = self.frame.size;
-//    double resolution = self.resolution.doubleValue;
-//    
-//    double offsetX = 20;
-//    double plotWidth = (mySize.width-((2*self.padding.doubleValue)+offsetX))*resolution;
-//    double offsetY = 20;
-//    double plotHeight = (mySize.height-((2*self.padding.doubleValue)+offsetY))*resolution;
-//    
-//    double plotOriginX = (self.padding.doubleValue+offsetX)*resolution;
-//    double plotOriginY = self.padding.doubleValue*resolution;
-//    
-//    CGRect plotRect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
-//
 }
 
 /*
