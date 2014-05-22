@@ -104,6 +104,13 @@
     return _stepSize;
 }
 
+- (ACAxis *)xAxis {
+    if (!_xAxis) {
+        _xAxis = [[ACAxis alloc] init];
+    }
+    return _xAxis;
+}
+
 - (ACAxisRange *)xAxisRange {
     if (!_xAxisRange) {
         _xAxisRange = [ACAxisRange axisRangeWithMinimum:1 andMaximum:10];
@@ -136,7 +143,6 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self.imageViewScatterPlot];
-    
     [self drawOverlayWithPoint:point];
     initialPoint = point;
     
@@ -174,7 +180,6 @@
 - (void)drawScatterPlot {
     CGSize mySize = self.frame.size;
     double resolution = self.resolution.doubleValue;
-    
 //    // Single thread
 //    UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
 //                                           mySize.height*resolution));
@@ -219,8 +224,10 @@
 //        NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
         CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
         
-        [self drawBoundsInContext:currentContext withRect:rect];
+        [self drawAxesInContext:currentContext inRect:rect];
+        [self drawAxesTicksInContext:currentContext inRect:rect];
         [self drawLinesInContext:currentContext inRect:rect];
+        
         imageHolder = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
@@ -233,14 +240,31 @@
 - (void)updateImage {
     self.imageViewScatterPlot.image = imageHolder;
 }
-- (void)drawBoundsInContext:(CGContextRef)context withRect:(CGRect)rect {
+//- (void)drawBoundsInContext:(CGContextRef)context withRect:(CGRect)rect {
+//    CGPoint *origin = &rect.origin;
+//    CGSize *size = &rect.size;
+//    CGContextMoveToPoint(context, origin->x, origin->y);
+//    CGContextAddLineToPoint(context, origin->x, origin->y+size->height);
+//    CGContextAddLineToPoint(context, origin->x+size->width, origin->y+size->height);
+////    CGContextAddLineToPoint(context, origin->x+size->width, origin->y);
+////    CGContextAddLineToPoint(context, origin->x, origin->y);
+//    
+//    CGContextSetLineCap(context, kCGLineCapRound);
+//    CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
+//    CGContextSetRGBStrokeColor(context, 0, 0, 1.0, 1.0);
+//    CGContextSetBlendMode(context, kCGBlendModeNormal);
+//    CGContextStrokePath(context);
+//}
+
+#pragma mark *** Should be used only within drawScatterPlot: ***
+- (void)drawAxesInContext:(CGContextRef)context inRect:(CGRect)rect {
     CGPoint *origin = &rect.origin;
     CGSize *size = &rect.size;
     CGContextMoveToPoint(context, origin->x, origin->y);
     CGContextAddLineToPoint(context, origin->x, origin->y+size->height);
     CGContextAddLineToPoint(context, origin->x+size->width, origin->y+size->height);
-//    CGContextAddLineToPoint(context, origin->x+size->width, origin->y);
-//    CGContextAddLineToPoint(context, origin->x, origin->y);
+    //    CGContextAddLineToPoint(context, origin->x+size->width, origin->y);
+    //    CGContextAddLineToPoint(context, origin->x, origin->y);
     
     CGContextSetLineCap(context, kCGLineCapRound);
     CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
@@ -249,13 +273,29 @@
     CGContextStrokePath(context);
 }
 
-#pragma mark *** Should be used only within drawScatterPlot: ***
-- (void)drawAxesInContext:(CGContextRef)context withSize:(CGSize)mySize andResolution:(double)resolution {
+- (void)drawAxesTicksInContext:(CGContextRef)context inRect:(CGRect)rect {
+    CGPoint *origin = &rect.origin;
+    CGSize *size = &rect.size;
+    double resolution = self.resolution.doubleValue;
+    // X Axis Major Ticks
+    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
+    double majorIntervalLength = self.xAxis.majorIntervalLength.doubleValue;
+    double majorTickLength = self.xAxis.majorTickLength.doubleValue*resolution;
     
-}
-
-- (void)drawAxesTicksInContext:(CGContextRef)context withSize:(CGSize)mySize andResolution:(double)resolution {
+    double xMax = origin->x+size->width+self.stepSize.doubleValue;
+    double xAxisYPosition = origin->y+size->height;
+//    NSLog(@"%f", origin->x);
+    for (double i = origin->x+xUnitLength*majorIntervalLength; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
+        CGContextMoveToPoint(context, i, xAxisYPosition);
+        CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
+//        NSLog(@"%.2f, %.2f", i, xMax);
+    }
     
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
+    CGContextSetRGBStrokeColor(context, 0, 0, 1.0, 1.0);
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    CGContextStrokePath(context);
 }
 
 - (void)drawAxesLabelsInContext:(CGContextRef)context withSize:(CGSize)mySize andResolution:(double)resolution {
@@ -282,21 +322,21 @@
     // Initial point
     CGContextMoveToPoint(context, xInitialPositionInPlot, yInitialPositionInPlot);
     
-    // Lines
+    // Lines - Scatter Plot Graph
     double xMax = origin->x+size->width + self.stepSize.doubleValue;
     
     for (double i = xInitialPositionInPlot + xUnitLength*self.stepSize.doubleValue; i <= xMax; i = i + xUnitLength*self.stepSize.doubleValue) {
         double xValue = xInitial + (i-xInitialPositionInPlot)/xUnitLength;
         double yValue = [self.dataSource scatterPlotView:self numberForValueUsingX:xValue].doubleValue;
-//        NSLog(@"%.2f, %.2f", xValue, yValue);
+        NSLog(@"%.2f, %.2f", xValue, yValue);
         
         double yPositionInPlot = size->height+origin->y - (yValue-self.yAxisRange.minimumNumber.doubleValue)*yUnitLength;
         CGContextAddLineToPoint(context, i, yPositionInPlot);
         
-//        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
+        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
     }
     
-    // Line properties
+    // Line properties - Scatter Plot Graph
     CGContextSetLineCap(context, kCGLineCapRound);
     CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1.0);
