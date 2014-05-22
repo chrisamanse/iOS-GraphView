@@ -78,7 +78,6 @@
 //    NSString *path = imageURL.path;
 //    
 //    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
-    
     [self.scatterPlotView regenerateMinimumAndMaximumValuesOfYAxisRange];
     [self.scatterPlotView drawScatterPlot];
 }
@@ -88,7 +87,7 @@
 - (NSNumber *)scatterPlotView:(ACScatterPlotView *)scatterPlotView numberForValueUsingX:(double)xValue {
     if (scatterPlotView == self.scatterPlotView) {
         return (NSNumber *)self.yValues[(int)xValue-1];
-//        return [NSNumber numberWithDouble:xValue];
+//        return [NSNumber numberWithDouble:sqrt(xValue)];
     }
     return [NSNumber numberWithInt:0];
 }
@@ -104,4 +103,5 @@
     self.labelXValue.text = @"";
     self.labelYValue.text = @"";
 }
+
 @end
