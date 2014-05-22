@@ -299,6 +299,7 @@
     double xAxisYPosition = origin->y+size->height;
     
     // X - Draw Major Ticks
+    int counter = 0;
     for (double i = origin->x+xUnitLength*majorIntervalLength; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
         // X - Draw Minor Ticks
         for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
@@ -307,12 +308,24 @@
         }
         CGContextMoveToPoint(context, i, xAxisYPosition);
         CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
+        counter++;
+    }
+    
+    // X - Draw Minor Ticks only if Major tick can
+    if (counter == 0) {
+        int i = origin->x+xUnitLength*majorIntervalLength;
+        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
+            if (i-(j+1)*minorTickIntervalLength*xUnitLength > origin->x+size->width) {
+                continue;
+            }
+            CGContextMoveToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition);
+            CGContextAddLineToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition+minorTickLength);
+        }
     }
     
     // Y Axis Major Ticks Properties
     majorIntervalLength = self.yAxis.majorIntervalLength.doubleValue;
     majorTickLength = self.yAxis.majorTickLength.doubleValue*resolution;
-    NSLog(@"%.3f", majorTickLength);
     // Y Axis Minor Ticks Properties
     minorTicksBetweenMajorIntervals = self.yAxis.minorTicksBetweenMajorIntervals.intValue;
     minorTickIntervalLength = majorIntervalLength/(minorTicksBetweenMajorIntervals+1);
@@ -322,6 +335,7 @@
     double yAxisXPosition = origin->x;
     
     // Y - Draw Major Ticks
+    counter = 0;
     for (double i = origin->y+size->height-yUnitLength*majorIntervalLength; i >= yMin; i = i - yUnitLength*majorIntervalLength) {
         // Y - Draw Minor Ticks
         for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
@@ -330,6 +344,20 @@
         }
         CGContextMoveToPoint(context, yAxisXPosition, i);
         CGContextAddLineToPoint(context, yAxisXPosition-majorTickLength, i);
+        counter++;
+    }
+    
+    // Y - Draw Minor Ticks only if Major tick can
+    if (counter == 0) {
+        int i = origin->y+size->height-yUnitLength*majorIntervalLength;
+        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
+            if (i+(j+1)*minorTickIntervalLength*yUnitLength < origin->y) {
+                continue;
+            }
+            CGContextMoveToPoint(context, yAxisXPosition, i+(j+1)*minorTickIntervalLength*yUnitLength);
+            CGContextAddLineToPoint(context, yAxisXPosition-minorTickLength, i+(j+1)*minorTickIntervalLength*yUnitLength);
+            NSLog(@"%i", j);
+        }
     }
     
     CGContextSetLineCap(context, kCGLineCapRound);
