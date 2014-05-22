@@ -85,7 +85,7 @@
 
 - (NSNumber *)resolution {
     if (!_resolution) {
-        _resolution = [NSNumber numberWithInt:2];
+        _resolution = [NSNumber numberWithDouble:[UIScreen mainScreen].scale];
     }
     return _resolution;
 }
