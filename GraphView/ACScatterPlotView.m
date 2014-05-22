@@ -96,6 +96,13 @@
     return _lineWidth;
 }
 
+- (NSNumber *)stepSize {
+    if (!_stepSize) {
+        _stepSize = [NSNumber numberWithDouble:1];
+    }
+    return _stepSize;
+}
+
 - (ACAxisRange *)xAxisRange {
     if (!_xAxisRange) {
         _xAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:10];
@@ -208,29 +215,37 @@
 }
 
 - (void)drawLinesInContext:(CGContextRef)context inRect:(CGRect)rect {
-    int interval = 10;
+//    int interval = 10;
     
     CGPoint *origin = &rect.origin;
-    CGSize *size =&rect.size;
+    CGSize *size = &rect.size;
     
     // Unit length
-    double unitLength = [self.xAxisRange getUnitLengthUsingPlotWidth:size->width].doubleValue;
-    NSLog(@"Unit length: %0.2f", unitLength);
+    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
+    double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
+    NSLog(@"\nUnit length x: %0.2f\nUnit length y: %0.2f", xUnitLength, yUnitLength);
+    
     // Initial y
-    double yInitial = origin->y+size->height;
+    double xInitial = self.xAxisRange.minimumNumber.doubleValue;
+    double xInitialPositionInPlot = origin->x;
+    double yInitial = [self.dataSource scatterPlotView:self numberForValueUsingX:xInitial].doubleValue*yUnitLength;
+    double yInitialPositionInPlot = size->height+origin->y - yInitial + self.yAxisRange.minimumNumber.doubleValue*yUnitLength;
     
     // Initial point
-    CGContextMoveToPoint(context, origin->x, yInitial);
+    CGContextMoveToPoint(context, xInitialPositionInPlot, yInitialPositionInPlot);
     
     // Lines
-    double xInitial = origin->x;
     double xMax = origin->x+size->width;
     
-    for (double i = xInitial+unitLength; i <= xMax; i=i+unitLength) {
-        double yValue = arc4random()%(int)size->height;
-        double yPositionInPlot = size->height - yValue+origin->y;
+    for (double i = xInitialPositionInPlot + xUnitLength*self.stepSize.doubleValue; i <= xMax; i = i + xUnitLength*self.stepSize.doubleValue) {
+        double xValue = xInitial + (i-xInitialPositionInPlot)/xUnitLength;
+        double yValue = [self.dataSource scatterPlotView:self numberForValueUsingX:xValue].doubleValue;
+        NSLog(@"%.2f, %.2f", xValue, yValue);
+        
+        double yPositionInPlot = size->height+origin->y - (yValue-self.yAxisRange.minimumNumber.doubleValue)*yUnitLength;
         CGContextAddLineToPoint(context, i, yPositionInPlot);
-        NSLog(@"%0.2f", yValue);
+        
+        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
     }
     
     // Line properties
