@@ -106,16 +106,29 @@
 
 - (ACAxisRange *)xAxisRange {
     if (!_xAxisRange) {
-        _xAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:10];
+        _xAxisRange = [ACAxisRange axisRangeWithMinimum:1 andMaximum:10];
     }
     return _xAxisRange;
 }
 
 - (ACAxisRange *)yAxisRange {
     if (!_yAxisRange) {
-        _yAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:10];
+        NSLog(@"Initializing yAxisRange");
+        // Generate minimum and maximum automatically using dataSource
+        NSNumber *xValue = self.xAxisRange.minimumNumber;
+        NSMutableArray *yValues = @[].mutableCopy;
+        for (double i = xValue.doubleValue; i < self.xAxisRange.maximumNumber.doubleValue; i+=self.stepSize.doubleValue) {
+            [yValues addObject:[self.dataSource scatterPlotView:self numberForValueUsingX:i]];
+        }
+        _yAxisRange = [ACAxisRange axisRangeGenerateMinimumAndMaximumUsingNumbersInArray:yValues];
     }
     return _yAxisRange;
+}
+
+#pragma mark - Instance Methods
+
+- (void)regenerateMinimumAndMaximumValuesOfYAxisRange {
+    self.yAxisRange = nil;
 }
 
 #pragma mark - Touches
@@ -162,7 +175,7 @@
     CGSize mySize = self.frame.size;
     double resolution = self.resolution.doubleValue;
     
-    // Single thread
+//    // Single thread
 //    UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
 //                                           mySize.height*resolution));
 //    CGContextRef currentContext = UIGraphicsGetCurrentContext();
@@ -202,8 +215,8 @@
         double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
         double plotOriginY = self.padding.doubleValue*resolution;
         
-        NSLog(@"Origin (%0.2f, %0.2f)", plotOriginX, plotOriginY);
-        NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
+//        NSLog(@"Origin (%0.2f, %0.2f)", plotOriginX, plotOriginY);
+//        NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
         CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
         
         [self drawBoundsInContext:currentContext withRect:rect];
@@ -258,7 +271,7 @@
     // Unit length
     double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
     double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
-    NSLog(@"\nUnit length x: %0.2f\nUnit length y: %0.2f", xUnitLength, yUnitLength);
+//    NSLog(@"\nUnit length x: %0.2f\nUnit length y: %0.2f", xUnitLength, yUnitLength);
     
     // Initial y
     double xInitial = self.xAxisRange.minimumNumber.doubleValue;
@@ -275,12 +288,12 @@
     for (double i = xInitialPositionInPlot + xUnitLength*self.stepSize.doubleValue; i <= xMax; i = i + xUnitLength*self.stepSize.doubleValue) {
         double xValue = xInitial + (i-xInitialPositionInPlot)/xUnitLength;
         double yValue = [self.dataSource scatterPlotView:self numberForValueUsingX:xValue].doubleValue;
-        NSLog(@"%.2f, %.2f", xValue, yValue);
+//        NSLog(@"%.2f, %.2f", xValue, yValue);
         
         double yPositionInPlot = size->height+origin->y - (yValue-self.yAxisRange.minimumNumber.doubleValue)*yUnitLength;
         CGContextAddLineToPoint(context, i, yPositionInPlot);
         
-        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
+//        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
     }
     
     // Line properties

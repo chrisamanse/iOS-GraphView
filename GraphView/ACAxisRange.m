@@ -37,11 +37,16 @@
         NSNumber *minimum = (NSNumber *)[sortedArray firstObject];
         NSNumber *maximum = (NSNumber *)[sortedArray lastObject];
         
-        NSLog(@"%0.2f", minimum.doubleValue);
-        NSLog(@"%0.2f", maximum.doubleValue);
         ACAxisRange *axisRange = [[ACAxisRange alloc] init];
         axisRange.minimumNumber = minimum;
         axisRange.maximumNumber = maximum;
+        
+        if (minimum.doubleValue == maximum.doubleValue) {
+            axisRange.minimumNumber = [NSNumber numberWithDouble:minimum.doubleValue-1];
+            axisRange.maximumNumber = [NSNumber numberWithDouble:maximum.doubleValue+1];
+        }
+        NSLog(@"%0.2f", minimum.doubleValue);
+        NSLog(@"%0.2f", maximum.doubleValue);
         return axisRange;
     }
     return nil;

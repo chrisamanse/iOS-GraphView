@@ -10,7 +10,8 @@
 
 #import "ACScatterPlotView.h"
 
-@interface ACViewController () <ACScatterPlotViewDataSource, ACScatterPlotViewDelegate>
+@interface ACViewController () <ACScatterPlotViewDataSource, ACScatterPlotViewDelegate> {
+}
 
 @property (strong, nonatomic) IBOutlet UIView *viewScatterPlotViewContainer;
 @property (strong, nonatomic) ACScatterPlotView *scatterPlotView;
@@ -53,10 +54,9 @@
 //    ACAxisRange *yAxisRange = [ACAxisRange axisRangeGenerateMinimumAndMaximumUsingNumbersInArray:self.yValues];
 //    self.scatterPlotView.yAxisRange = yAxisRange;
     
-    ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:10];
-    
-    self.scatterPlotView.yAxisRange = yAxisRange;
-    self.scatterPlotView.stepSize = [NSNumber numberWithDouble:0.01];
+//    ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:10];
+//    self.scatterPlotView.yAxisRange = yAxisRange;
+    self.scatterPlotView.stepSize = [NSNumber numberWithDouble:1];
     
     [self.scatterPlotView drawScatterPlot];
 }
@@ -78,6 +78,8 @@
 //    NSString *path = imageURL.path;
 //    
 //    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
+    
+    [self.scatterPlotView regenerateMinimumAndMaximumValuesOfYAxisRange];
     [self.scatterPlotView drawScatterPlot];
 }
 
@@ -85,8 +87,8 @@
 
 - (NSNumber *)scatterPlotView:(ACScatterPlotView *)scatterPlotView numberForValueUsingX:(double)xValue {
     if (scatterPlotView == self.scatterPlotView) {
-//        return (NSNumber *)self.yValues[(int)xValue-1];
-        return [NSNumber numberWithDouble:sqrt(xValue)];
+        return (NSNumber *)self.yValues[(int)xValue-1];
+//        return [NSNumber numberWithDouble:xValue];
     }
     return [NSNumber numberWithInt:0];
 }

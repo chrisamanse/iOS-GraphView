@@ -34,6 +34,7 @@
 @property (strong, nonatomic) ACAxisRange *xAxisRange;
 @property (strong, nonatomic) ACAxisRange *yAxisRange;
 
+- (void)regenerateMinimumAndMaximumValuesOfYAxisRange;
 - (void)drawScatterPlot;
 
 @end
