@@ -31,9 +31,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     self.scatterPlotView = [[ACScatterPlotView alloc]
-                            initWithFrame:CGRectMake(0, 0,
-                                                     self.viewScatterPlotViewContainer.frame.size.width,
-                                                     self.viewScatterPlotViewContainer.frame.size.height)];
+                            initWithFrame:self.viewScatterPlotViewContainer.bounds];
     [self.viewScatterPlotViewContainer addSubview:self.scatterPlotView];
     
     self.scatterPlotView.dataSource = self;
@@ -55,7 +53,7 @@
 //    ACAxisRange *yAxisRange = [ACAxisRange axisRangeGenerateMinimumAndMaximumUsingNumbersInArray:self.yValues];
 //    self.scatterPlotView.yAxisRange = yAxisRange;
     
-    ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:42 andMaximum:47];
+    ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:40 andMaximum:50];
     self.scatterPlotView.yAxisRange = yAxisRange;
     self.scatterPlotView.stepSize = [NSNumber numberWithDouble:1];
     

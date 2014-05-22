@@ -111,6 +111,13 @@
     return _xAxis;
 }
 
+- (ACAxis *)yAxis {
+    if (!_yAxis) {
+        _yAxis = [[ACAxis alloc] init];
+    }
+    return _yAxis;
+}
+
 - (ACAxisRange *)xAxisRange {
     if (!_xAxisRange) {
         _xAxisRange = [ACAxisRange axisRangeWithMinimum:1 andMaximum:10];
@@ -180,6 +187,7 @@
 - (void)drawScatterPlot {
     CGSize mySize = self.frame.size;
     double resolution = self.resolution.doubleValue;
+    
 //    // Single thread
 //    UIGraphicsBeginImageContext(CGSizeMake(mySize.width*resolution,
 //                                           mySize.height*resolution));
@@ -263,8 +271,6 @@
     CGContextMoveToPoint(context, origin->x, origin->y);
     CGContextAddLineToPoint(context, origin->x, origin->y+size->height);
     CGContextAddLineToPoint(context, origin->x+size->width, origin->y+size->height);
-    //    CGContextAddLineToPoint(context, origin->x+size->width, origin->y);
-    //    CGContextAddLineToPoint(context, origin->x, origin->y);
     
     CGContextSetLineCap(context, kCGLineCapRound);
     CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
@@ -279,10 +285,10 @@
     double resolution = self.resolution.doubleValue;
     
     double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
+    double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
     
     // X Axis Major Ticks Properties
     double majorIntervalLength = self.xAxis.majorIntervalLength.doubleValue;
-    int majorIntervals = size->width/(majorIntervalLength*xUnitLength);
     double majorTickLength = self.xAxis.majorTickLength.doubleValue*resolution;
     // X Axis Minor Ticks Properties
     int minorTicksBetweenMajorIntervals = self.xAxis.minorTicksBetweenMajorIntervals.intValue;
@@ -292,19 +298,38 @@
     double xMax = origin->x+size->width + self.stepSize.doubleValue;
     double xAxisYPosition = origin->y+size->height;
     
-    // Draw Major Ticks
-    NSLog(@"%i", majorIntervals);
-    
+    // X - Draw Major Ticks
     for (double i = origin->x+xUnitLength*majorIntervalLength; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
-        // Draw Minor Ticks
+        // X - Draw Minor Ticks
         for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
-            
             CGContextMoveToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition);
             CGContextAddLineToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition+minorTickLength);
         }
-        
         CGContextMoveToPoint(context, i, xAxisYPosition);
         CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
+    }
+    
+    // Y Axis Major Ticks Properties
+    majorIntervalLength = self.yAxis.majorIntervalLength.doubleValue;
+    majorTickLength = self.yAxis.majorTickLength.doubleValue*resolution;
+    NSLog(@"%.3f", majorTickLength);
+    // Y Axis Minor Ticks Properties
+    minorTicksBetweenMajorIntervals = self.yAxis.minorTicksBetweenMajorIntervals.intValue;
+    minorTickIntervalLength = majorIntervalLength/(minorTicksBetweenMajorIntervals+1);
+    minorTickLength = self.yAxis.minorTickLength.doubleValue*resolution;
+    
+    double yMin = origin->y;
+    double yAxisXPosition = origin->x;
+    
+    // Y - Draw Major Ticks
+    for (double i = origin->y+size->height-yUnitLength*majorIntervalLength; i >= yMin; i = i - yUnitLength*majorIntervalLength) {
+        // Y - Draw Minor Ticks
+        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
+            CGContextMoveToPoint(context, yAxisXPosition, i+(j+1)*minorTickIntervalLength*yUnitLength);
+            CGContextAddLineToPoint(context, yAxisXPosition-minorTickLength, i+(j+1)*minorTickIntervalLength*yUnitLength);
+        }
+        CGContextMoveToPoint(context, yAxisXPosition, i);
+        CGContextAddLineToPoint(context, yAxisXPosition-majorTickLength, i);
     }
     
     CGContextSetLineCap(context, kCGLineCapRound);
