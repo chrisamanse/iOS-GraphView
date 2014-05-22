@@ -15,7 +15,7 @@
     self = [super init];
     if (self) {
         self.majorIntervalLength = [NSNumber numberWithDouble:5];
-        self.minorTicksBetweenMajorIntervals = [NSNumber numberWithDouble:1];
+        self.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:4];
         self.majorTickLength = [NSNumber numberWithDouble:7.0];
         self.minorTickLength = [NSNumber numberWithDouble:5.0];
     }

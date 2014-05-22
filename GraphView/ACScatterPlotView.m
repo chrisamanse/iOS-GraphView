@@ -277,18 +277,34 @@
     CGPoint *origin = &rect.origin;
     CGSize *size = &rect.size;
     double resolution = self.resolution.doubleValue;
-    // X Axis Major Ticks
-    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
-    double majorIntervalLength = self.xAxis.majorIntervalLength.doubleValue;
-    double majorTickLength = self.xAxis.majorTickLength.doubleValue*resolution;
     
-    double xMax = origin->x+size->width+self.stepSize.doubleValue;
+    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
+    
+    // X Axis Major Ticks Properties
+    double majorIntervalLength = self.xAxis.majorIntervalLength.doubleValue;
+    int majorIntervals = size->width/(majorIntervalLength*xUnitLength);
+    double majorTickLength = self.xAxis.majorTickLength.doubleValue*resolution;
+    // X Axis Minor Ticks Properties
+    int minorTicksBetweenMajorIntervals = self.xAxis.minorTicksBetweenMajorIntervals.intValue;
+    double minorTickIntervalLength = majorIntervalLength/(minorTicksBetweenMajorIntervals+1);
+    double minorTickLength = self.xAxis.minorTickLength.doubleValue*resolution;
+    
+    double xMax = origin->x+size->width + self.stepSize.doubleValue;
     double xAxisYPosition = origin->y+size->height;
-//    NSLog(@"%f", origin->x);
+    
+    // Draw Major Ticks
+    NSLog(@"%i", majorIntervals);
+    
     for (double i = origin->x+xUnitLength*majorIntervalLength; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
+        // Draw Minor Ticks
+        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
+            
+            CGContextMoveToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition);
+            CGContextAddLineToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition+minorTickLength);
+        }
+        
         CGContextMoveToPoint(context, i, xAxisYPosition);
         CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
-//        NSLog(@"%.2f, %.2f", i, xMax);
     }
     
     CGContextSetLineCap(context, kCGLineCapRound);
@@ -328,12 +344,12 @@
     for (double i = xInitialPositionInPlot + xUnitLength*self.stepSize.doubleValue; i <= xMax; i = i + xUnitLength*self.stepSize.doubleValue) {
         double xValue = xInitial + (i-xInitialPositionInPlot)/xUnitLength;
         double yValue = [self.dataSource scatterPlotView:self numberForValueUsingX:xValue].doubleValue;
-        NSLog(@"%.2f, %.2f", xValue, yValue);
+//        NSLog(@"%.2f, %.2f", xValue, yValue);
         
         double yPositionInPlot = size->height+origin->y - (yValue-self.yAxisRange.minimumNumber.doubleValue)*yUnitLength;
         CGContextAddLineToPoint(context, i, yPositionInPlot);
         
-        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
+//        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
     }
     
     // Line properties - Scatter Plot Graph
