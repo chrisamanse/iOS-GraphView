@@ -36,6 +36,7 @@
     
     self.scatterPlotView.dataSource = self;
     self.scatterPlotView.delegate = self;
+    self.scatterPlotView.resolution = [NSNumber numberWithDouble:2.0]; // Text labels position bug when resolution is different
     
     ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:1 andMaximum:31];
     self.scatterPlotView.xAxisRange = xAxisRange;
@@ -105,7 +106,7 @@
     return [NSNumber numberWithInt:0];
 }
 - (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForLabelBelowX:(double)xValue {
-    return [NSString stringWithFormat:@"May %i", (int)round(xValue)];
+    return [NSString stringWithFormat:@"January %i", (int)round(xValue)];
 }
 
 #pragma mark - ACScatterPlotViewDelegate

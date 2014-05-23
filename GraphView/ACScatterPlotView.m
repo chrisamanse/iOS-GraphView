@@ -337,7 +337,7 @@
         }
         
         BOOL tilted = NO;
-        double angle;
+        double angle = 0;
         
         // Check if there is a valid assigned angle
         if (self.tiltedLabelAngleInRadians && self.tiltedLabelAngleInRadians.doubleValue != 0) {
