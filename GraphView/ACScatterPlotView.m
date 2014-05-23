@@ -298,6 +298,7 @@
     double xMax = origin->x+size->width + self.stepSize.doubleValue;
     double xAxisYPosition = origin->y+size->height;
     
+    // !!! FIX THIS - instead of drawing ticks backward from a major tick, reverse it;
     // X - Draw Major Ticks
     int counter = 0;
     for (double i = origin->x+xUnitLength*majorIntervalLength; i <= xMax; i = i + xUnitLength*majorIntervalLength) {

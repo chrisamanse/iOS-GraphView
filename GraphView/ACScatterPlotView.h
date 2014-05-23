@@ -45,6 +45,9 @@
 @required
 - (NSNumber *)scatterPlotView:(ACScatterPlotView *)scatterPlotView numberForValueUsingX:(double)xValue;
 
+@optional
+- (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForMajorTickIndex:(NSInteger)index;
+
 @end
 
 // Send messages to delegate when selection occurs
