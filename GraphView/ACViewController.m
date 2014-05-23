@@ -37,10 +37,12 @@
     self.scatterPlotView.dataSource = self;
     self.scatterPlotView.delegate = self;
     
-    ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:30];
+    ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:28];
     self.scatterPlotView.xAxisRange = xAxisRange;
+    self.scatterPlotView.leftInset = [NSNumber numberWithDouble:30];
     self.scatterPlotView.bottomInset = [NSNumber numberWithDouble:40];
     self.scatterPlotView.tiltedLabelAngleInRadians = [NSNumber numberWithDouble:3*M_PI/8];
+    
     // 31 days
     double values[31] = {44.0, 43.5, 45.0, 45.1, 45.0, 44.87,
         45.0, 46, 44.0, 45.8, 44, 43.7,
@@ -54,8 +56,12 @@
 //    ACAxisRange *yAxisRange = [ACAxisRange axisRangeGenerateMinimumAndMaximumUsingNumbersInArray:self.yValues];
 //    self.scatterPlotView.yAxisRange = yAxisRange;
     
-    ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:40 andMaximum:50];
+    ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:35 andMaximum:55];
     self.scatterPlotView.yAxisRange = yAxisRange;
+    ACAxis *xAxis = [[ACAxis alloc] init];
+    xAxis.majorIntervalLength = [NSNumber numberWithDouble:7];
+    xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:6];
+    self.scatterPlotView.xAxis = xAxis;
     self.scatterPlotView.stepSize = [NSNumber numberWithDouble:1];
     
     [self.scatterPlotView drawScatterPlot];
@@ -68,18 +74,18 @@
 }
 
 - (IBAction)didPressSaveButton:(id)sender {
-//    UIImage *image = self.scatterPlotView.imageViewScatterPlot.image;
-//    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    dateFormatter.dateFormat = @"yyyyMMddHHmm";
-//    NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
-//    NSString *fileName = [NSString stringWithFormat:@"graph_%@.jpeg", dateString];
-//    NSURL *imageURL = [url URLByAppendingPathComponent:fileName];
-//    NSString *path = imageURL.path;
-//    
-//    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
-    [self.scatterPlotView regenerateMinimumAndMaximumValuesOfYAxisRange];
-    [self.scatterPlotView drawScatterPlot];
+    UIImage *image = self.scatterPlotView.imageViewScatterPlot.image;
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyyMMddHHmmss";
+    NSString *dateString = [dateFormatter stringFromDate:[NSDate date]];
+    NSString *fileName = [NSString stringWithFormat:@"graph_%@.jpeg", dateString];
+    NSURL *imageURL = [url URLByAppendingPathComponent:fileName];
+    NSString *path = imageURL.path;
+    
+    [UIImageJPEGRepresentation(image, 1.0) writeToFile:path atomically:YES];
+//    [self.scatterPlotView regenerateMinimumAndMaximumValuesOfYAxisRange];
+//    [self.scatterPlotView drawScatterPlot];
 }
 
 #pragma mark - ACScatterPlotViewDataSource
@@ -97,6 +103,10 @@
 - (void)scatterPlotView:(ACScatterPlotView *)scatterPlotView didSelectXValue:(double)xValue withResultingYValue:(double)yValue {
     self.labelXValue.text = [NSString stringWithFormat:@"%.3f", xValue];
     self.labelYValue.text = [NSString stringWithFormat:@"%.3f", yValue];
+}
+
+- (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForLabelBelowX:(double)xValue {
+    return [NSString stringWithFormat:@"May %i", (int)round(xValue)];
 }
 
 - (void)scatterPlotViewDidRemoveOverlay:(ACScatterPlotView *)scatterPlotView {

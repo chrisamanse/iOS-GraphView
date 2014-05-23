@@ -14,12 +14,37 @@
 {
     self = [super init];
     if (self) {
-        self.majorIntervalLength = [NSNumber numberWithDouble:5];
-        self.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:4];
-        self.majorTickLength = [NSNumber numberWithDouble:10.0];
-        self.minorTickLength = [NSNumber numberWithDouble:5.0];
+        self.labelFontSize = 10.0;
     }
     return self;
+}
+
+- (NSNumber *)majorIntervalLength {
+    if (!_majorIntervalLength) {
+        _majorIntervalLength = [NSNumber numberWithDouble:5];
+    }
+    return _majorIntervalLength;
+}
+
+- (NSNumber *)minorTicksBetweenMajorIntervals {
+    if (!_minorTicksBetweenMajorIntervals) {
+        _minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:4];
+    }
+    return _minorTicksBetweenMajorIntervals;
+}
+
+- (NSNumber *)majorTickLength {
+    if (!_majorTickLength) {
+        _majorTickLength = [NSNumber numberWithDouble:10.0];
+    }
+    return _majorTickLength;
+}
+
+- (NSNumber *)minorTickLength {
+    if (!_minorTickLength) {
+        _minorTickLength = [NSNumber numberWithDouble:5.0];
+    }
+    return _minorTickLength;
 }
 
 @end

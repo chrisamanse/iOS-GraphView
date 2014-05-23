@@ -48,7 +48,7 @@
 - (NSNumber *)scatterPlotView:(ACScatterPlotView *)scatterPlotView numberForValueUsingX:(double)xValue;
 
 @optional
-- (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForMajorTickIndex:(NSInteger)index;
+- (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForLabelBelowX:(double)xValue;
 
 @end
 

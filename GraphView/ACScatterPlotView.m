@@ -249,8 +249,6 @@
         double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
         double plotOriginY = self.padding.doubleValue*resolution;
         
-//        NSLog(@"Origin (%0.2f, %0.2f)", plotOriginX, plotOriginY);
-//        NSLog(@"Size (%0.2f, %0.2f)", plotWidth, plotHeight);
         CGRect rect = CGRectMake(plotOriginX, plotOriginY, plotWidth, plotHeight);
         
         [self drawAxesInContext:currentContext inRect:rect];
@@ -317,8 +315,17 @@
         CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
         counter++;
         
-        NSString *textLabel = @"May 23";
-        double fontSize = 10;
+        NSString *textLabel;
+        double xValue = self.xAxisRange.minimumNumber.doubleValue + (i-origin->x)/xUnitLength;
+//        NSLog(@"\nxValue for major tick %i = %0.3f", counter, xValue);
+        
+        if ([self.dataSource respondsToSelector:@selector(scatterPlotView:stringForLabelBelowX:)]) {
+            textLabel = [self.dataSource scatterPlotView:self stringForLabelBelowX:xValue];
+        } else {
+            textLabel = [NSString stringWithFormat:@"%.1f", xValue];
+        }
+        
+        double fontSize = self.xAxis.labelFontSize;
         BOOL tilted = NO;
         double angle;
         
@@ -327,9 +334,9 @@
             tilted = YES;
             angle = self.tiltedLabelAngleInRadians.doubleValue;
         }
-       
+        
         double xOriginText = i;
-        double yOriginText = xAxisYPosition+majorTickLength+fontSize;
+        double yOriginText = xAxisYPosition+majorTickLength + fontSize*resolution/2;
         
         CGContextSetTextDrawingMode(context, kCGTextFill);
         CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
@@ -338,12 +345,12 @@
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, xOriginText, yOriginText);
         
-        double textOriginX = -(NSInteger)textLabel.length*fontSize/2;
+        double textOriginX = -(NSInteger)textLabel.length*fontSize*resolution/4;
         if (tilted) {
             CGContextRotateCTM(context, -angle);
             textOriginX *= 2;
         }
-        double textOriginY = -fontSize;
+        double textOriginY = -fontSize*resolution/2;
         [textLabel drawAtPoint:CGPointMake(textOriginX, textOriginY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
         CGContextRestoreGState(context);
     }
@@ -382,6 +389,26 @@
         CGContextMoveToPoint(context, yAxisXPosition, i);
         CGContextAddLineToPoint(context, yAxisXPosition-majorTickLength, i);
         counter++;
+        
+        double yValue = self.yAxisRange.maximumNumber.doubleValue - (i-origin->y)/yUnitLength;
+        NSString *textLabel = [NSString stringWithFormat:@"%.1f", yValue];
+//        NSLog(@"\nyValue for major tick %i = %0.3f", counter, yValue);
+        
+        double fontSize = self.yAxis.labelFontSize;
+        
+        double xOriginText = yAxisXPosition-majorTickLength + fontSize*resolution/2;
+        double yOriginText = i;
+        
+        CGContextSetTextDrawingMode(context, kCGTextFill);
+        CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, xOriginText, yOriginText);
+        
+        double textOriginX = -(NSInteger)textLabel.length*fontSize*resolution/2 - majorTickLength*fontSize/10;
+        double textOriginY = -fontSize*resolution/2;
+        
+        [textLabel drawAtPoint:CGPointMake(textOriginX, textOriginY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
+        CGContextRestoreGState(context);
     }
     
     // Y - Draw Minor Ticks only if Major tick cant be drawn
@@ -409,15 +436,12 @@
 }
 
 - (void)drawLinesInContext:(CGContextRef)context inRect:(CGRect)rect {
-//    int interval = 10;
-    
     CGPoint *origin = &rect.origin;
     CGSize *size = &rect.size;
     
     // Unit length
     double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
     double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
-//    NSLog(@"\nUnit length x: %0.2f\nUnit length y: %0.2f", xUnitLength, yUnitLength);
     
     // Initial y
     double xInitial = self.xAxisRange.minimumNumber.doubleValue;
@@ -434,12 +458,9 @@
     for (double i = xInitialPositionInPlot + xUnitLength*self.stepSize.doubleValue; i <= xMax; i = i + xUnitLength*self.stepSize.doubleValue) {
         double xValue = xInitial + (i-xInitialPositionInPlot)/xUnitLength;
         double yValue = [self.dataSource scatterPlotView:self numberForValueUsingX:xValue].doubleValue;
-//        NSLog(@"%.2f, %.2f", xValue, yValue);
         
         double yPositionInPlot = size->height+origin->y - (yValue-self.yAxisRange.minimumNumber.doubleValue)*yUnitLength;
         CGContextAddLineToPoint(context, i, yPositionInPlot);
-        
-//        NSLog(@"%.2f, %.2f", i, yPositionInPlot);
     }
     
     // Line properties - Scatter Plot Graph
