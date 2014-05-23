@@ -37,7 +37,7 @@
     self.scatterPlotView.dataSource = self;
     self.scatterPlotView.delegate = self;
     
-    ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:28];
+    ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:1 andMaximum:31];
     self.scatterPlotView.xAxisRange = xAxisRange;
     self.scatterPlotView.leftInset = [NSNumber numberWithDouble:30];
     self.scatterPlotView.bottomInset = [NSNumber numberWithDouble:40];
@@ -59,9 +59,14 @@
     ACAxisRange *yAxisRange = [ACAxisRange axisRangeWithMinimum:35 andMaximum:55];
     self.scatterPlotView.yAxisRange = yAxisRange;
     ACAxis *xAxis = [[ACAxis alloc] init];
-    xAxis.majorIntervalLength = [NSNumber numberWithDouble:7];
-    xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:6];
+    xAxis.majorIntervalLength = [NSNumber numberWithDouble:2];
+    xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:1];
     self.scatterPlotView.xAxis = xAxis;
+    
+    ACAxis *yAxis = [[ACAxis alloc] init];
+    yAxis.majorIntervalLength = [NSNumber numberWithDouble:2];
+    yAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:1];
+    self.scatterPlotView.yAxis = yAxis;
     self.scatterPlotView.stepSize = [NSNumber numberWithDouble:1];
     
     [self.scatterPlotView drawScatterPlot];
@@ -92,10 +97,13 @@
 
 - (NSNumber *)scatterPlotView:(ACScatterPlotView *)scatterPlotView numberForValueUsingX:(double)xValue {
     if (scatterPlotView == self.scatterPlotView) {
-        return (NSNumber *)self.yValues[(int)round(xValue)];
+        return (NSNumber *)self.yValues[(int)round(xValue)-1];
 //        return [NSNumber numberWithDouble:sqrt(xValue)];
     }
     return [NSNumber numberWithInt:0];
+}
+- (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForLabelBelowX:(double)xValue {
+    return [NSString stringWithFormat:@"May %i", (int)round(xValue)];
 }
 
 #pragma mark - ACScatterPlotViewDelegate
@@ -105,9 +113,6 @@
     self.labelYValue.text = [NSString stringWithFormat:@"%.3f", yValue];
 }
 
-- (NSString *)scatterPlotView:(ACScatterPlotView *)scatterPlotView stringForLabelBelowX:(double)xValue {
-    return [NSString stringWithFormat:@"May %i", (int)round(xValue)];
-}
 
 - (void)scatterPlotViewDidRemoveOverlay:(ACScatterPlotView *)scatterPlotView {
     self.labelXValue.text = @"";
