@@ -317,7 +317,6 @@
         
         NSString *textLabel;
         double xValue = self.xAxisRange.minimumNumber.doubleValue + (i-origin->x)/xUnitLength;
-//        NSLog(@"\nxValue for major tick %i = %0.3f", counter, xValue);
         
         if ([self.dataSource respondsToSelector:@selector(scatterPlotView:stringForLabelBelowX:)]) {
             textLabel = [self.dataSource scatterPlotView:self stringForLabelBelowX:xValue];
@@ -325,7 +324,18 @@
             textLabel = [NSString stringWithFormat:@"%.1f", xValue];
         }
         
+        // Max font size
+        double maxFontSize = 2*((self.padding.doubleValue+self.bottomInset.doubleValue) - majorTickLength)/textLabel.length;
+        
+        // Font size set by user or default
         double fontSize = self.xAxis.labelFontSize;
+        
+        // If greater than max font size, set to max
+        if (fontSize > maxFontSize) {
+            NSLog(@"Font to big, adjusting to max possible font size");
+            fontSize = maxFontSize;
+        }
+        
         BOOL tilted = NO;
         double angle;
         

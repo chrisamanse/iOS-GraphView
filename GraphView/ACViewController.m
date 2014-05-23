@@ -61,6 +61,7 @@
     ACAxis *xAxis = [[ACAxis alloc] init];
     xAxis.majorIntervalLength = [NSNumber numberWithDouble:2];
     xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:1];
+    xAxis.labelFontSize = 20;
     self.scatterPlotView.xAxis = xAxis;
     
     ACAxis *yAxis = [[ACAxis alloc] init];
