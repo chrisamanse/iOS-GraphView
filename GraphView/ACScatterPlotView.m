@@ -332,7 +332,7 @@
         
         // If greater than max font size, set to max
         if (fontSize > maxFontSize) {
-            NSLog(@"Font to big, adjusting to max possible font size");
+            NSLog(@"X Axis: Font to big, adjusting to max possible font size");
             fontSize = maxFontSize;
         }
         
@@ -343,6 +343,11 @@
         if (self.tiltedLabelAngleInRadians && self.tiltedLabelAngleInRadians.doubleValue != 0) {
             tilted = YES;
             angle = self.tiltedLabelAngleInRadians.doubleValue;
+        } else if (majorIntervalLength*xUnitLength <= textLabel.length*fontSize*resolution/2) {
+            // If set/default to not tilt, automatic tilt if text is too wide
+            NSLog(@"Text to compressed, tilting...");
+            tilted = YES;
+            angle = 3*M_PI/8;
         }
         
         double xOriginText = i;
@@ -401,10 +406,20 @@
         counter++;
         
         double yValue = self.yAxisRange.maximumNumber.doubleValue - (i-origin->y)/yUnitLength;
-        NSString *textLabel = [NSString stringWithFormat:@"%.1f", yValue];
-//        NSLog(@"\nyValue for major tick %i = %0.3f", counter, yValue);
+        NSString *textLabel = [NSString stringWithFormat:@"%.2f", yValue];
         
+        
+        // Max font size
+        double maxFontSize = 2*((self.padding.doubleValue+self.leftInset.doubleValue) - majorTickLength)/textLabel.length;
+        
+        // Font size set by user or default
         double fontSize = self.yAxis.labelFontSize;
+        
+        // If greater than max font size, set to max
+        if (fontSize > maxFontSize) {
+            NSLog(@"Y Axis: Font to big, adjusting to max possible font size");
+            fontSize = maxFontSize;
+        }
         
         double xOriginText = yAxisXPosition-majorTickLength + fontSize*resolution/2;
         double yOriginText = i;
