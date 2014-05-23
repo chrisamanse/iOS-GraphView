@@ -40,6 +40,7 @@
     ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:0 andMaximum:30];
     self.scatterPlotView.xAxisRange = xAxisRange;
     self.scatterPlotView.bottomInset = [NSNumber numberWithDouble:40];
+    self.scatterPlotView.tiltedLabelsInXAxis = YES;
     
     // 31 days
     double values[31] = {44.0, 43.5, 45.0, 45.1, 45.0, 44.87,

@@ -118,6 +118,13 @@
     return _stepSize;
 }
 
+- (BOOL)hasTiltedLabelsInXAxis {
+    if (!_tiltedLabelsInXAxis) {
+        _tiltedLabelsInXAxis = NO;
+    }
+    return _tiltedLabelsInXAxis;
+}
+
 - (ACAxis *)xAxis {
     if (!_xAxis) {
         _xAxis = [[ACAxis alloc] init];
@@ -312,7 +319,7 @@
         
         NSString *textLabel = @"May 23";
         double fontSize = 10;
-        BOOL tilted = YES;
+        BOOL tilted = self.hasTiltedLabelsInXAxis;
         double angle = M_PI/4;
         
         CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, 0);
