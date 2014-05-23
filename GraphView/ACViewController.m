@@ -36,7 +36,7 @@
     
     self.scatterPlotView.dataSource = self;
     self.scatterPlotView.delegate = self;
-    self.scatterPlotView.resolution = [NSNumber numberWithDouble:2.0]; // Text labels position bug when resolution is different
+//    self.scatterPlotView.resolution = [NSNumber numberWithDouble:2.0]; // Text labels position bug when resolution is different
     
     ACAxisRange *xAxisRange = [ACAxisRange axisRangeWithMinimum:1 andMaximum:31];
     self.scatterPlotView.xAxisRange = xAxisRange;
@@ -63,7 +63,7 @@
     ACAxis *xAxis = [[ACAxis alloc] init];
     xAxis.majorIntervalLength = [NSNumber numberWithDouble:2];
     xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:1];
-    xAxis.labelFontSize = 20;
+//    xAxis.labelFontSize = 20;
     self.scatterPlotView.xAxis = xAxis;
     
     ACAxis *yAxis = [[ACAxis alloc] init];

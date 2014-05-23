@@ -20,7 +20,7 @@
 @property (weak, nonatomic) id<ACScatterPlotViewDelegate>delegate;
 
 @property (strong, nonatomic, readonly) UIImageView *imageViewScatterPlot;
-@property (strong, nonatomic) NSNumber *resolution;
+@property (strong, nonatomic) NSNumber *resolution; // Sets image resolution scale from container view size. If not set, default is set to screen's scale ([UIScreen mainScreen].scale), results to same size of container in pixels
 @property (strong, nonatomic) NSNumber *padding;
 @property (strong, nonatomic) NSNumber *leftInset;
 @property (strong, nonatomic) NSNumber *bottomInset;

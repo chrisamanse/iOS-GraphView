@@ -325,7 +325,7 @@
         }
         
         // Max font size
-        double maxFontSize = 2*((self.padding.doubleValue+self.bottomInset.doubleValue) - majorTickLength)/textLabel.length;
+        double maxFontSize = 2*((self.padding.doubleValue+self.bottomInset.doubleValue) - majorTickLength/resolution)/textLabel.length;
         
         // Font size set by user or default
         double fontSize = self.xAxis.labelFontSize;
@@ -351,7 +351,7 @@
         }
         
         double xOriginText = i;
-        double yOriginText = xAxisYPosition+majorTickLength + fontSize*resolution/2;
+        double yOriginText = xAxisYPosition+majorTickLength;
         
         CGContextSetTextDrawingMode(context, kCGTextFill);
         CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
@@ -410,7 +410,7 @@
         
         
         // Max font size
-        double maxFontSize = 2*((self.padding.doubleValue+self.leftInset.doubleValue) - majorTickLength)/textLabel.length;
+        double maxFontSize = 2*((self.padding.doubleValue+self.leftInset.doubleValue) - majorTickLength/resolution)/textLabel.length;
         
         // Font size set by user or default
         double fontSize = self.yAxis.labelFontSize;
