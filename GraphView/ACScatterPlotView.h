@@ -28,7 +28,7 @@
 
 @property (strong, nonatomic) NSNumber *stepSize;
 
-@property (nonatomic, getter = hasTiltedLabelsInXAxis) BOOL tiltedLabelsInXAxis;
+@property (strong, nonatomic) NSNumber *tiltedLabelAngleInRadians;
 
 @property (strong, nonatomic) ACAxis *xAxis;
 @property (strong, nonatomic) ACAxis *yAxis;

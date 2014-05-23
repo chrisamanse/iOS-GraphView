@@ -118,11 +118,11 @@
     return _stepSize;
 }
 
-- (BOOL)hasTiltedLabelsInXAxis {
-    if (!_tiltedLabelsInXAxis) {
-        _tiltedLabelsInXAxis = NO;
+- (NSNumber *)tiltedLabelAngleInRadians {
+    if (!_tiltedLabelAngleInRadians) {
+        _tiltedLabelAngleInRadians = [NSNumber numberWithDouble:0];
     }
-    return _tiltedLabelsInXAxis;
+    return _tiltedLabelAngleInRadians;
 }
 
 - (ACAxis *)xAxis {
@@ -319,29 +319,33 @@
         
         NSString *textLabel = @"May 23";
         double fontSize = 10;
-        BOOL tilted = self.hasTiltedLabelsInXAxis;
-        double angle = M_PI/4;
+        BOOL tilted = NO;
+        double angle;
         
-        CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, 0);
-        
-        double xOriginText = i-(textLabel.length*fontSize*resolution/4);
-        double yOriginText = xAxisYPosition+majorTickLength+(fontSize*resolution);
-        
-        if (tilted) {
-            transform = CGAffineTransformRotate(transform, angle);
-            xOriginText -= (textLabel.length*fontSize*resolution/16);
-            yOriginText +=((textLabel.length/3)*fontSize*resolution);
+        // Check if there is a valid assigned angle
+        if (self.tiltedLabelAngleInRadians && self.tiltedLabelAngleInRadians.doubleValue != 0) {
+            tilted = YES;
+            angle = self.tiltedLabelAngleInRadians.doubleValue;
         }
+       
+        double xOriginText = i;
+        double yOriginText = xAxisYPosition+majorTickLength+fontSize;
         
-        CGContextSetTextMatrix(context, transform);
-        CGContextSelectFont(context, "Helvetica", fontSize*resolution, kCGEncodingMacRoman);
         CGContextSetTextDrawingMode(context, kCGTextFill);
         CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
-        CGContextShowTextAtPoint(context,
-                                 xOriginText,
-                                 yOriginText,
-                                 [textLabel cStringUsingEncoding:NSUTF8StringEncoding], textLabel.length);
         
+        // Handle tilted angles
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, xOriginText, yOriginText);
+        
+        double textOriginX = -(NSInteger)textLabel.length*fontSize/2;
+        if (tilted) {
+            CGContextRotateCTM(context, -angle);
+            textOriginX *= 2;
+        }
+        double textOriginY = -fontSize;
+        [textLabel drawAtPoint:CGPointMake(textOriginX, textOriginY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
+        CGContextRestoreGState(context);
     }
     
     // X - Draw Minor Ticks only if Major tick cant be drawn
