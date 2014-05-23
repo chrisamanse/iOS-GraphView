@@ -42,7 +42,7 @@
     self.scatterPlotView.xAxisRange = xAxisRange;
     self.scatterPlotView.leftInset = [NSNumber numberWithDouble:30];
     self.scatterPlotView.bottomInset = [NSNumber numberWithDouble:40];
-//    self.scatterPlotView.tiltedLabelAngleInRadians = [NSNumber numberWithDouble:3*M_PI/8];
+    self.scatterPlotView.tiltedLabelAngleInRadians = [NSNumber numberWithDouble:3*M_PI/8];
     
     // 31 days
     double values[31] = {44.0, 43.5, 45.0, 45.1, 45.0, 44.87,
@@ -61,13 +61,13 @@
     self.scatterPlotView.yAxisRange = yAxisRange;
     
     ACAxis *xAxis = [[ACAxis alloc] init];
-    xAxis.majorIntervalLength = [NSNumber numberWithDouble:2];
-    xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:1];
+    xAxis.majorIntervalLength = [NSNumber numberWithDouble:7];
+    xAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:6];
 //    xAxis.labelFontSize = 20;
     self.scatterPlotView.xAxis = xAxis;
     
     ACAxis *yAxis = [[ACAxis alloc] init];
-    yAxis.majorIntervalLength = [NSNumber numberWithDouble:1.25];
+    yAxis.majorIntervalLength = [NSNumber numberWithDouble:1.5];
     yAxis.minorTicksBetweenMajorIntervals = [NSNumber numberWithInt:3];
     self.scatterPlotView.yAxis = yAxis;
     self.scatterPlotView.stepSize = [NSNumber numberWithDouble:1];

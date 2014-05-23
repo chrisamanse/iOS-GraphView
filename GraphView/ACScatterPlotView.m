@@ -304,7 +304,6 @@
     
     // !!! FIX THIS - instead of drawing ticks backward from a major tick, reverse it;
     // X - Draw Major Ticks
-    int counter = 0;
     for (double i = origin->x; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
         // X - Draw Major Ticks INCLUDING ORIGIN
         CGContextMoveToPoint(context, i, xAxisYPosition);
@@ -319,7 +318,6 @@
             CGContextMoveToPoint(context, xPositionOfMinorTick, xAxisYPosition);
             CGContextAddLineToPoint(context, xPositionOfMinorTick, xAxisYPosition+minorTickLength);
         }
-        counter++;
         
         NSString *textLabel;
         double xValue = self.xAxisRange.minimumNumber.doubleValue + (i-origin->x)/xUnitLength;
@@ -376,18 +374,6 @@
         CGContextRestoreGState(context);
     }
     
-    // X - Draw Minor Ticks only if Major tick cant be drawn
-    if (counter == 0) {
-        int i = origin->x+xUnitLength*majorIntervalLength;
-        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
-            if (i-(j+1)*minorTickIntervalLength*xUnitLength > origin->x+size->width) {
-                continue;
-            }
-            CGContextMoveToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition);
-            CGContextAddLineToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition+minorTickLength);
-        }
-    }
-    
     // Y Axis Major Ticks Properties
     majorIntervalLength = self.yAxis.majorIntervalLength.doubleValue;
     majorTickLength = self.yAxis.majorTickLength.doubleValue*resolution;
@@ -400,16 +386,19 @@
     double yAxisXPosition = origin->x;
     
     // Y - Draw Major Ticks
-    counter = 0;
-    for (double i = origin->y+size->height-yUnitLength*majorIntervalLength; i >= yMin; i = i - yUnitLength*majorIntervalLength) {
+    for (double i = origin->y+size->height; i >= yMin; i = i - yUnitLength*majorIntervalLength) {
         // Y - Draw Minor Ticks
-        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
-            CGContextMoveToPoint(context, yAxisXPosition, i+(j+1)*minorTickIntervalLength*yUnitLength);
-            CGContextAddLineToPoint(context, yAxisXPosition-minorTickLength, i+(j+1)*minorTickIntervalLength*yUnitLength);
-        }
         CGContextMoveToPoint(context, yAxisXPosition, i);
         CGContextAddLineToPoint(context, yAxisXPosition-majorTickLength, i);
-        counter++;
+        
+        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
+            double yPositionOfMinorTick = i-(j+1)*minorTickIntervalLength*yUnitLength;
+            if (yPositionOfMinorTick < origin->y) {
+                break;
+            }
+            CGContextMoveToPoint(context, yAxisXPosition, yPositionOfMinorTick);
+            CGContextAddLineToPoint(context, yAxisXPosition-minorTickLength, yPositionOfMinorTick);
+        }
         
         double yValue = self.yAxisRange.maximumNumber.doubleValue - (i-origin->y)/yUnitLength;
         NSString *textLabel = [NSString stringWithFormat:@"%.2f", yValue];
@@ -440,19 +429,6 @@
         
         [textLabel drawAtPoint:CGPointMake(textOriginX, textOriginY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
         CGContextRestoreGState(context);
-    }
-    
-    // Y - Draw Minor Ticks only if Major tick cant be drawn
-    if (counter == 0) {
-        int i = origin->y+size->height-yUnitLength*majorIntervalLength;
-        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
-            if (i+(j+1)*minorTickIntervalLength*yUnitLength < origin->y) {
-                continue;
-            }
-            CGContextMoveToPoint(context, yAxisXPosition, i+(j+1)*minorTickIntervalLength*yUnitLength);
-            CGContextAddLineToPoint(context, yAxisXPosition-minorTickLength, i+(j+1)*minorTickIntervalLength*yUnitLength);
-            NSLog(@"%i", j);
-        }
     }
     
     CGContextSetLineCap(context, kCGLineCapRound);
