@@ -305,14 +305,20 @@
     // !!! FIX THIS - instead of drawing ticks backward from a major tick, reverse it;
     // X - Draw Major Ticks
     int counter = 0;
-    for (double i = origin->x+xUnitLength*majorIntervalLength; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
-        // X - Draw Minor Ticks
-        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
-            CGContextMoveToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition);
-            CGContextAddLineToPoint(context, i-(j+1)*minorTickIntervalLength*xUnitLength, xAxisYPosition+minorTickLength);
-        }
+    for (double i = origin->x; i <= xMax; i = i + xUnitLength*majorIntervalLength) {
+        // X - Draw Major Ticks INCLUDING ORIGIN
         CGContextMoveToPoint(context, i, xAxisYPosition);
         CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
+        
+        // X - Draw Minor Ticks
+        for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
+            double xPositionOfMinorTick = i+(j+1)*minorTickIntervalLength*xUnitLength;
+            if (xPositionOfMinorTick > origin->x+size->width) {
+                break;
+            }
+            CGContextMoveToPoint(context, xPositionOfMinorTick, xAxisYPosition);
+            CGContextAddLineToPoint(context, xPositionOfMinorTick, xAxisYPosition+minorTickLength);
+        }
         counter++;
         
         NSString *textLabel;
