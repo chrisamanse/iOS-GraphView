@@ -336,7 +336,6 @@
         
         // If greater than max font size, set to max
         if (fontSize > maxFontSize) {
-            NSLog(@"X Axis: Font to big, adjusting to max possible font size");
             fontSize = maxFontSize;
         }
         
@@ -349,7 +348,6 @@
             angle = self.tiltedLabelAngleInRadians.doubleValue;
         } else if (majorIntervalLength*xUnitLength <= textLabel.length*fontSize*resolution/2) {
             // If set/default to not tilt, automatic tilt if text is too wide
-            NSLog(@"Text to compressed, tilting...");
             tilted = YES;
             angle = 3*M_PI/8;
         }
@@ -412,7 +410,6 @@
         
         // If greater than max font size, set to max
         if (fontSize > maxFontSize) {
-            NSLog(@"Y Axis: Font to big, adjusting to max possible font size");
             fontSize = maxFontSize;
         }
         
