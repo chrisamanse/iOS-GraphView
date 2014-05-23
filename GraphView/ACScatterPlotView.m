@@ -311,7 +311,7 @@
         counter++;
     }
     
-    // X - Draw Minor Ticks only if Major tick can be drawn
+    // X - Draw Minor Ticks only if Major tick cant be drawn
     if (counter == 0) {
         int i = origin->x+xUnitLength*majorIntervalLength;
         for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
@@ -347,7 +347,7 @@
         counter++;
     }
     
-    // Y - Draw Minor Ticks only if Major tick can be drawn
+    // Y - Draw Minor Ticks only if Major tick cant be drawn
     if (counter == 0) {
         int i = origin->y+size->height-yUnitLength*majorIntervalLength;
         for (int j = 0; j < minorTicksBetweenMajorIntervals; j++) {
