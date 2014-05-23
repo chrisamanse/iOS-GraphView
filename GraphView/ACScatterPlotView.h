@@ -22,8 +22,8 @@
 @property (strong, nonatomic, readonly) UIImageView *imageViewScatterPlot;
 @property (strong, nonatomic) NSNumber *resolution;
 @property (strong, nonatomic) NSNumber *padding;
-@property (strong, nonatomic) NSNumber *xInset;
-@property (strong, nonatomic) NSNumber *yInset;
+@property (strong, nonatomic) NSNumber *leftInset;
+@property (strong, nonatomic) NSNumber *bottomInset;
 @property (strong, nonatomic) NSNumber *lineWidth;
 
 @property (strong, nonatomic) NSNumber *stepSize;

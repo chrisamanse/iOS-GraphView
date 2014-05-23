@@ -76,6 +76,13 @@
     _imageViewOverlay = imageViewOverlay;
 }
 
+- (NSNumber *)resolution {
+    if (!_resolution) {
+        _resolution = [NSNumber numberWithDouble:[UIScreen mainScreen].scale];
+    }
+    return _resolution;
+}
+
 - (NSNumber *)padding {
     if (!_padding) {
         _padding = [NSNumber numberWithInt:10];
@@ -83,11 +90,18 @@
     return _padding;
 }
 
-- (NSNumber *)resolution {
-    if (!_resolution) {
-        _resolution = [NSNumber numberWithDouble:[UIScreen mainScreen].scale];
+- (NSNumber *)leftInset {
+    if (!_leftInset) {
+        _leftInset = [NSNumber numberWithDouble:20];
     }
-    return _resolution;
+    return _leftInset;
+}
+
+- (NSNumber *)bottomInset {
+    if (!_bottomInset) {
+        _bottomInset = [NSNumber numberWithDouble:20];
+    }
+    return _bottomInset;
 }
 
 - (NSNumber *)lineWidth {
@@ -220,9 +234,9 @@
                                                mySize.height*resolution));
         CGContextRef currentContext = UIGraphicsGetCurrentContext();
         
-        double insetX = 20;
+        double insetX = self.leftInset.doubleValue;
         double plotWidth = (mySize.width-((2*self.padding.doubleValue)+insetX))*resolution;
-        double insetY = 20;
+        double insetY = self.bottomInset.doubleValue;
         double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution;
         
         double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
@@ -248,21 +262,6 @@
 - (void)updateImage {
     self.imageViewScatterPlot.image = imageHolder;
 }
-//- (void)drawBoundsInContext:(CGContextRef)context withRect:(CGRect)rect {
-//    CGPoint *origin = &rect.origin;
-//    CGSize *size = &rect.size;
-//    CGContextMoveToPoint(context, origin->x, origin->y);
-//    CGContextAddLineToPoint(context, origin->x, origin->y+size->height);
-//    CGContextAddLineToPoint(context, origin->x+size->width, origin->y+size->height);
-////    CGContextAddLineToPoint(context, origin->x+size->width, origin->y);
-////    CGContextAddLineToPoint(context, origin->x, origin->y);
-//    
-//    CGContextSetLineCap(context, kCGLineCapRound);
-//    CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
-//    CGContextSetRGBStrokeColor(context, 0, 0, 1.0, 1.0);
-//    CGContextSetBlendMode(context, kCGBlendModeNormal);
-//    CGContextStrokePath(context);
-//}
 
 #pragma mark *** Should be used only within drawScatterPlot: ***
 - (void)drawAxesInContext:(CGContextRef)context inRect:(CGRect)rect {
@@ -446,9 +445,9 @@
     CGSize mySize = self.frame.size;
     double resolution = self.resolution.doubleValue;
     
-    double insetX = 20;
+    double insetX = self.leftInset.doubleValue;
     double plotWidth = (mySize.width-((2*self.padding.doubleValue)+insetX))*resolution;
-    double insetY = 20;
+    double insetY = self.bottomInset.doubleValue;
     double plotHeight = (mySize.height-((2*self.padding.doubleValue)+insetY))*resolution;
     
     double plotOriginX = (self.padding.doubleValue+insetX)*resolution;
