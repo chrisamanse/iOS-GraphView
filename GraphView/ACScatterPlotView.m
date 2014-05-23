@@ -310,6 +310,32 @@
         CGContextMoveToPoint(context, i, xAxisYPosition);
         CGContextAddLineToPoint(context, i, xAxisYPosition+majorTickLength);
         counter++;
+        
+        NSString *textLabel = @"May 23";
+        double fontSize = 10;
+        BOOL tilted = YES;
+        double angle = M_PI/4;
+        
+        CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, -1, 0, 0);
+        
+        double xOriginText = i-(textLabel.length*fontSize*resolution/4);
+        double yOriginText = xAxisYPosition+majorTickLength+(fontSize*resolution);
+        
+        if (tilted) {
+            transform = CGAffineTransformRotate(transform, angle);
+            xOriginText -= (textLabel.length*fontSize*resolution/16);
+            yOriginText +=((textLabel.length/3)*fontSize*resolution);
+        }
+        
+        CGContextSetTextMatrix(context, transform);
+        CGContextSelectFont(context, "Helvetica", fontSize*resolution, kCGEncodingMacRoman);
+        CGContextSetTextDrawingMode(context, kCGTextFill);
+        CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
+        CGContextShowTextAtPoint(context,
+                                 xOriginText,
+                                 yOriginText,
+                                 [textLabel cStringUsingEncoding:NSUTF8StringEncoding], textLabel.length);
+        
     }
     
     // X - Draw Minor Ticks only if Major tick cant be drawn
