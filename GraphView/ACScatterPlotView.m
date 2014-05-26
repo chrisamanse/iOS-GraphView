@@ -412,13 +412,15 @@
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, xOriginText, yOriginText);
         
-        double textOriginX = -(NSInteger)textLabel.length*fontSize*resolution/4;
+        double textPositionX = -(NSInteger)textLabel.length*fontSize*resolution/4;
+        double textPositionY = 0;
         if (tilted) {
             CGContextRotateCTM(context, -angle);
-            textOriginX *= 2;
+            textPositionX *= 2;
+            textPositionY = -fontSize*resolution/2;
         }
-        double textOriginY = -fontSize*resolution/2;
-        [textLabel drawAtPoint:CGPointMake(textOriginX, textOriginY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
+        
+        [textLabel drawAtPoint:CGPointMake(textPositionX, textPositionY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
         CGContextRestoreGState(context);
     }
     
@@ -472,10 +474,10 @@
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, xOriginText, yOriginText);
         
-        double textOriginX = -(NSInteger)textLabel.length*fontSize*resolution/2 - majorTickLength*fontSize/10;
-        double textOriginY = -fontSize*resolution/2;
+        double textPositiongX = -(NSInteger)textLabel.length*fontSize*resolution/2 - majorTickLength*fontSize/10;
+        double textPositionY = -fontSize*resolution/2;
         
-        [textLabel drawAtPoint:CGPointMake(textOriginX, textOriginY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
+        [textLabel drawAtPoint:CGPointMake(textPositiongX, textPositionY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
         CGContextRestoreGState(context);
     }
     
