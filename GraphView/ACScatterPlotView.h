@@ -39,7 +39,7 @@
 
 @property (strong, nonatomic) NSNumber *stepSize;
 
-@property (strong, nonatomic) NSNumber *tiltedLabelAngleInRadians;
+@property (strong, nonatomic) NSNumber *rotationAngleOfLabels;
 
 @property (strong, nonatomic) ACAxis *xAxis;
 @property (strong, nonatomic) ACAxis *yAxis;

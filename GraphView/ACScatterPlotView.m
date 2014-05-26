@@ -168,11 +168,11 @@
     return _stepSize;
 }
 
-- (NSNumber *)tiltedLabelAngleInRadians {
-    if (!_tiltedLabelAngleInRadians) {
-        _tiltedLabelAngleInRadians = [NSNumber numberWithDouble:0];
+- (NSNumber *)rotationAngleOfLabels {
+    if (!_rotationAngleOfLabels) {
+        _rotationAngleOfLabels = [NSNumber numberWithDouble:0];
     }
-    return _tiltedLabelAngleInRadians;
+    return _rotationAngleOfLabels;
 }
 
 - (ACAxis *)xAxis {
@@ -210,11 +210,6 @@
     return _yAxisRange;
 }
 
-#pragma mark - Instance Methods
-
-- (void)regenerateMinimumAndMaximumValuesOfYAxisRange {
-    self.yAxisRange = nil;
-}
 
 #pragma mark - Touches
 
@@ -251,6 +246,12 @@
     }
     
     lastPoint = point;
+}
+
+#pragma mark - Instance Methods
+
+- (void)regenerateMinimumAndMaximumValuesOfYAxisRange {
+    self.yAxisRange = nil;
 }
 
 #pragma mark - Draw scatter plot
@@ -393,9 +394,9 @@
         double angle = 0;
         
         // Check if there is a valid assigned angle
-        if (self.tiltedLabelAngleInRadians && self.tiltedLabelAngleInRadians.doubleValue != 0) {
+        if (self.rotationAngleOfLabels && self.rotationAngleOfLabels.doubleValue != 0) {
             tilted = YES;
-            angle = self.tiltedLabelAngleInRadians.doubleValue;
+            angle = self.rotationAngleOfLabels.doubleValue;
         } else if (majorIntervalLength*xUnitLength <= textLabel.length*fontSize*resolution/2) {
             // If set/default to not tilt, automatic tilt if text is too wide
             tilted = YES;

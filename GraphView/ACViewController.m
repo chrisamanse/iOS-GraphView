@@ -42,7 +42,7 @@
     self.scatterPlotView.xAxisRange = xAxisRange;
     self.scatterPlotView.leftInset = [NSNumber numberWithDouble:30];
     self.scatterPlotView.bottomInset = [NSNumber numberWithDouble:40];
-    self.scatterPlotView.tiltedLabelAngleInRadians = [NSNumber numberWithDouble:3*M_PI/8];
+    self.scatterPlotView.rotationAngleOfLabels = [NSNumber numberWithDouble:3*M_PI/8];
     
     // 31 days
     double values[31] = {44.0, 43.5, 45.0, 45.1, 45.0, 44.87,
