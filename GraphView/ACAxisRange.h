@@ -16,6 +16,6 @@
 + (instancetype)axisRangeWithMinimum:(double)minimum andMaximum:(double)maximum;
 + (instancetype)axisRangeGenerateMinimumAndMaximumUsingNumbersInArray:(NSArray *)numbers;
 
-- (NSNumber *)getUnitLengthUsingPlotWidthOrHeight:(double)plotWidth;
+- (double)getUnitLengthUsingPlotWidthOrHeight:(double)plotWidth;
 
 @end

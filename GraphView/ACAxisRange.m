@@ -52,9 +52,8 @@
     return nil;
 }
 
-- (NSNumber *)getUnitLengthUsingPlotWidthOrHeight:(double)plotDimension {
-    double unitLength = plotDimension/(self.maximumNumber.doubleValue-self.minimumNumber.doubleValue);
-    return [NSNumber numberWithDouble:unitLength];
+- (double)getUnitLengthUsingPlotWidthOrHeight:(double)plotDimension {
+    return plotDimension/(self.maximumNumber.doubleValue-self.minimumNumber.doubleValue);
 }
 
 @end

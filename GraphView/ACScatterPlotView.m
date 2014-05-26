@@ -338,8 +338,8 @@
     CGSize *size = &rect.size;
     double resolution = self.resolution.doubleValue;
     
-    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
-    double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
+    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width];
+    double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height];
     
     // X Axis Major Ticks Properties
     double majorIntervalLength = self.xAxis.majorIntervalLength.doubleValue;
@@ -495,8 +495,8 @@
     CGSize *size = &rect.size;
     
     // Unit length
-    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
-    double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
+    double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width];
+    double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height];
     
     // Initial y
     double xInitial = self.xAxisRange.minimumNumber.doubleValue;
@@ -550,8 +550,8 @@
         CGContextRef currentContext = UIGraphicsGetCurrentContext();
         
         // Unit length
-        double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width].doubleValue;
-        double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height].doubleValue;
+        double xUnitLength = [self.xAxisRange getUnitLengthUsingPlotWidthOrHeight:size->width];
+        double yUnitLength = [self.yAxisRange getUnitLengthUsingPlotWidthOrHeight:size->height];
         
         double truePointX = point.x*resolution;
         int index = round(((truePointX-plotOriginX)/xUnitLength)/self.stepSize.doubleValue);
