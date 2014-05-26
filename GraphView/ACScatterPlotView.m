@@ -106,9 +106,59 @@
 
 - (NSNumber *)lineWidth {
     if (!_lineWidth) {
-        _lineWidth = [NSNumber numberWithDouble:0.75];
+        _lineWidth = [NSNumber numberWithDouble:1];
     }
     return _lineWidth;
+}
+
+- (NSNumber *)overlayLineWidth {
+    if (!_overlayLineWidth) {
+        _overlayLineWidth = [NSNumber numberWithDouble:2];
+    }
+    return _overlayLineWidth;
+}
+
+
+- (NSNumber *)overlayIndicatorRadius {
+    if (!_overlayIndicatorRadius) {
+        _overlayIndicatorRadius = [NSNumber numberWithDouble:3];
+    }
+    return _overlayIndicatorRadius;
+}
+
+- (NSNumber *)axesLineWidth {
+    if (!_axesLineWidth) {
+        _axesLineWidth = [NSNumber numberWithDouble:1];
+    }
+    return _axesLineWidth;
+}
+
+- (UIColor *)lineColor {
+    if (!_lineColor) {
+        _lineColor = [UIColor blackColor];
+    }
+    return _lineColor;
+}
+
+- (UIColor *)overlayLineColor {
+    if (!_overlayLineColor) {
+        _overlayLineColor = [UIColor redColor];
+    }
+    return _overlayLineColor;
+}
+
+- (UIColor *)overlayIndicatorColor {
+    if (!_overlayIndicatorColor) {
+        _overlayIndicatorColor = [UIColor redColor];
+    }
+    return _overlayIndicatorColor;
+}
+
+-(UIColor *)axesLineColor {
+    if (!_axesLineColor) {
+        _axesLineColor = [UIColor blackColor];
+    }
+    return _axesLineColor;
 }
 
 - (NSNumber *)stepSize {
@@ -277,8 +327,8 @@
     CGContextAddLineToPoint(context, origin->x+size->width, origin->y+size->height);
     
     CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
-    CGContextSetRGBStrokeColor(context, 0, 0, 1.0, 1.0);
+    CGContextSetLineWidth(context, self.axesLineWidth.doubleValue*self.resolution.doubleValue);
+    CGContextSetStrokeColorWithColor(context, self.axesLineColor.CGColor);
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextStrokePath(context);
 }
@@ -418,6 +468,7 @@
         
         CGContextSetTextDrawingMode(context, kCGTextFill);
         CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
+        
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, xOriginText, yOriginText);
         
@@ -428,9 +479,9 @@
         CGContextRestoreGState(context);
     }
     
-    CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
-    CGContextSetRGBStrokeColor(context, 0, 0, 1.0, 1.0);
+    CGContextSetLineCap(context, kCGLineCapSquare);
+    CGContextSetLineWidth(context, self.axesLineWidth.doubleValue*self.resolution.doubleValue);
+    CGContextSetStrokeColorWithColor(context, self.axesLineColor.CGColor);
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextStrokePath(context);
 }
@@ -468,9 +519,9 @@
     }
     
     // Line properties - Scatter Plot Graph
-    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineCap(context, kCGLineCapSquare);
     CGContextSetLineWidth(context, self.lineWidth.doubleValue*self.resolution.doubleValue);
-    CGContextSetRGBStrokeColor(context, 0, 0, 0, 1.0);
+    CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextStrokePath(context);
 }
@@ -517,17 +568,19 @@
         CGContextAddLineToPoint(currentContext, snappedPointX, plotOriginY);
         
         
-        CGContextSetLineCap(currentContext, kCGLineCapRound);
-        CGContextSetLineWidth(currentContext, self.lineWidth.doubleValue*resolution);
-        CGContextSetRGBStrokeColor(currentContext, 1.0, 0, 0, 1.0);
+        CGContextSetLineCap(currentContext, kCGLineCapSquare);
+        CGContextSetLineWidth(currentContext, self.overlayLineWidth.doubleValue*resolution);
+        CGContextSetStrokeColorWithColor(currentContext, self.overlayLineColor.CGColor);
         CGContextSetBlendMode(currentContext, kCGBlendModeNormal);
         CGContextStrokePath(currentContext);
         
+        double radius = self.overlayIndicatorRadius.doubleValue*resolution;
+        
         // Dot indicator for position of y value
-        CGRect yValueRect = CGRectMake(snappedPointX-3*resolution,
-                                       yPositionInPlot-3*resolution,
-                                       3*resolution*2, 3*resolution*2);
-        CGContextSetRGBFillColor(currentContext, 1.0, 0, 0, 1.0);
+        CGRect yValueRect = CGRectMake(snappedPointX-radius,
+                                       yPositionInPlot-radius,
+                                       radius*2, radius*2);
+        CGContextSetFillColorWithColor(currentContext, self.overlayIndicatorColor.CGColor);
         CGContextFillEllipseInRect(currentContext, yValueRect);
         
         self.imageViewOverlay.image = UIGraphicsGetImageFromCurrentImageContext();

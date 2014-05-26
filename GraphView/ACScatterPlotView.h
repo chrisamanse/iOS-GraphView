@@ -24,7 +24,18 @@
 @property (strong, nonatomic) NSNumber *padding;
 @property (strong, nonatomic) NSNumber *leftInset;
 @property (strong, nonatomic) NSNumber *bottomInset;
+
+// Line Widths
 @property (strong, nonatomic) NSNumber *lineWidth;
+@property (strong, nonatomic) NSNumber *overlayLineWidth;
+@property (strong, nonatomic) NSNumber *overlayIndicatorRadius;
+@property (strong, nonatomic) NSNumber *axesLineWidth;
+
+// Colors
+@property (strong, nonatomic) UIColor *lineColor;
+@property (strong, nonatomic) UIColor *overlayLineColor;
+@property (strong, nonatomic) UIColor *overlayIndicatorColor;
+@property (strong, nonatomic) UIColor *axesLineColor;
 
 @property (strong, nonatomic) NSNumber *stepSize;
 
