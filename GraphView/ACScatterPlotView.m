@@ -466,7 +466,7 @@
             fontSize = maxFontSize;
         }
         
-        double xOriginText = yAxisXPosition-majorTickLength + fontSize*resolution/2;
+        double xOriginText = yAxisXPosition-majorTickLength;
         double yOriginText = i;
         
         CGContextSetTextDrawingMode(context, kCGTextFill);
@@ -475,10 +475,10 @@
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, xOriginText, yOriginText);
         
-        double textPositiongX = -(NSInteger)textLabel.length*fontSize*resolution/2 - majorTickLength*fontSize/10;
+        double textPositionX = -(NSInteger)textLabel.length*fontSize*resolution/2;
         double textPositionY = -fontSize*resolution/2;
         
-        [textLabel drawAtPoint:CGPointMake(textPositiongX, textPositionY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
+        [textLabel drawAtPoint:CGPointMake(textPositionX, textPositionY) withFont:[UIFont fontWithName:@"Helvetica" size:fontSize*resolution]];
         CGContextRestoreGState(context);
     }
     
