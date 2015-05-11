@@ -39,6 +39,9 @@
 /* Begin PBXFileReference section */
 		DF01E9DE192BA48000BE977E /* ACAxisRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAxisRange.h; sourceTree = "<group>"; };
 		DF01E9DF192BA48000BE977E /* ACAxisRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAxisRange.m; sourceTree = "<group>"; };
+		DF82F3301B0131AA002B6990 /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		DF82F3311B0131AA002B6990 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DF82F3351B0132D8002B6990 /* AppPreview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppPreview.png; sourceTree = "<group>"; };
 		DFBF4C69192B670400118C9B /* GraphView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFBF4C6C192B670400118C9B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DFBF4C6E192B670400118C9B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -88,9 +91,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DF82F3341B0132D8002B6990 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				DF82F3351B0132D8002B6990 /* AppPreview.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		DFBF4C60192B670400118C9B = {
 			isa = PBXGroup;
 			children = (
+				DF82F3301B0131AA002B6990 /* LICENSE.md */,
+				DF82F3311B0131AA002B6990 /* README.md */,
+				DF82F3341B0132D8002B6990 /* Images */,
 				DFBF4C72192B670400118C9B /* GraphView */,
 				DFBF4C91192B670400118C9B /* GraphViewTests */,
 				DFBF4C6B192B670400118C9B /* Frameworks */,
